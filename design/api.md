@@ -268,3 +268,25 @@ interface IContactDeleteResponseModel {
 
 ## User Profile
 
+### Set user profile
+
+```http
+PUT /api/v1/user/info
+Authentication: TOKEN
+```
+
+```typescript
+interface ISetUserInfoRequestModel {
+  avatar: string;
+  nickname: string;
+  wx_id: string;
+}
+```
+
+```typescript
+interface ISetUserInfoResponseModel {
+  code: number;
+  msg?: string;
+}
+```
+
