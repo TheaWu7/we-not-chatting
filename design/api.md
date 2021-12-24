@@ -137,8 +137,6 @@ interface IPostMomentsResponseModel {
 }
 ```
 
-
-
 ### Delete Moments
 
 ```http
@@ -179,8 +177,6 @@ interface ILikeMomentResponseModel {
 }
 ```
 
-
-
 ### Comments
 
 ```http
@@ -201,4 +197,74 @@ interface ICommentMomentResponseModel {
   msg?: string;
 }
 ```
+
+
+
+## Contact
+
+### Add Friends
+
+```http
+POST /api/v1/contact/add
+Authentication: TOKEN
+```
+
+```typescript
+interface IContactAddRequestModel {
+  wx_id: string;
+  msg: string;	//验证信息
+}
+```
+
+```typescript
+interface IContactAddResponseModel {
+  code: number;
+  msg?: string;
+}
+```
+
+### Remarks
+
+```http
+POST /api/v1/contact/remarks
+Authentication: TOKEN
+```
+
+```typescript
+interface IContactRemarksRequestModel {
+  wx_id: string;
+  name: string;
+}
+```
+
+```typescript
+interface IContactRemarksResponseModel {
+  code: number;
+  msg?: string;
+}
+```
+
+### Delete Friends
+
+```http
+POST /api/v1/contact/delete
+Authentication: TOKEN
+```
+
+```typescript
+interface IContactDeleteRequestModel {
+  wx_id: string;
+}
+```
+
+```typescript
+interface IContactDeleteResponseModel {
+  code: number;
+  msg?: string;
+}
+```
+
+
+
+## User Profile
 
