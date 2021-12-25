@@ -1,0 +1,29 @@
+.tabbarWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  padding-bottom: 5px;
+  background: #f9f9f9;
+  border-top: 1px solid #ebebeb;
+  backdrop-filter: blur(100px);
+}
+.icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  text-decoration: none;
+  color: #000;
+}
+.icons span {
+  margin-top: 3px;
+}
+.iconsClick {
+  color: #58be6b;
+}

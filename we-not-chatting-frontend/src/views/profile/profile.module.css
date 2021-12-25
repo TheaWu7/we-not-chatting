@@ -1,0 +1,14 @@
+.profileWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.avatar {
+  position: fixed;
+}
+.infoWrapper {
+  width: 100%;
+  height: calc(100vh - 100vw);
+  background: #fff;
+  border-radius: 25px;
+  transform: translateY(calc(100vw - 25px));
+}

@@ -29,8 +29,12 @@ interface IRegisterResponseModel {
 ### Login
 
 ```http
-POST /api/v1/user/login
+POST /api/v1/user/login/phone
 Content-Type: application/json
+```
+
+```http
+POST /api/v1/user/login/email
 ```
 
 ```typescript
@@ -82,7 +86,6 @@ interface IGetUserInfoResponseModel {
   data?: {
     nickname: string;
     avatar: string;
-    wx_id: string;
   }
 }
 ```

@@ -1,0 +1,21 @@
+.contactsWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.topbarWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  height: 49px;
+  background: #ededed;
+}
+.topTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+.topImg {
+  position: absolute;
+  right: 15px;
+  vertical-align: middle;
+}
