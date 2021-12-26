@@ -30,11 +30,12 @@ class Contact(BaseModel):
 
 class Moments(BaseModel):
     id = CharField(max_length=21, primary_key=True)
+    time = IntegerField()
     likes = TextField()
     comments = TextField()
     poster = ForeignKeyField(User)
     content = TextField()
-    media = TextField()
+    media = TextField(null=True)
 
 
 class ChatHistory(BaseModel):

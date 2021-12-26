@@ -1,6 +1,7 @@
 from fastapi.responses import JSONResponse
 from backend import app
 from backend.models.send_verification_model import SendVerificationModel
+from backend.models.response_model import SimpleResponseModel
 from backend.apis import MISSING_ARGS_RESPONSE
 from backend.services.verifiaction_code import send_verification_code
 
@@ -12,7 +13,5 @@ def send_verification(data: SendVerificationModel):
 
     code = send_verification_code(data.phone)
     print(f"verification code: {code}")
-    return JSONResponse({
-            "code": 0,
-            "msg": None,
-    })
+    res = SimpleResponseModel(code=0, msg=None)
+    return JSONResponse(res.json())

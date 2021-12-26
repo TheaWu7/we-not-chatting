@@ -3,19 +3,15 @@
 ### Register
 
 ```http
-POST /api/v1/user/register
+POST /api/v1/user/register HTTP/1.1
 Content-Type: application/json
 ```
 
 ```typescript
 interface IRegisterRequestModel {
-  // email or phone, choose one
-  email?: string;
-  phone?: string;
-  // password or verification, choose one
-  pwd?: string;  // MD5
-  // 短信验证码
-  verification?: number;
+  phone: string;
+  pwd: string;  // MD5
+  verification: number;
 }
 ```
 
@@ -29,12 +25,12 @@ interface IRegisterResponseModel {
 ### Login
 
 ```http
-POST /api/v1/user/login/phone
+POST /api/v1/user/login/phone HTTP/1.1
 Content-Type: application/json
 ```
 
 ```http
-POST /api/v1/user/login/email
+POST /api/v1/user/login/email HTTP/1.1
 ```
 
 ```typescript
@@ -46,6 +42,7 @@ interface ILoginResponseModel {
   code: number;
   msg?: string;
   data?: {
+    user_id: string;
     token: string;
   }
 }
@@ -54,7 +51,7 @@ interface ILoginResponseModel {
 ### Send Verification Code
 
 ```http
-POST /api/v1/send_verification
+POST /api/v1/send_verification HTTP/1.1
 Content-Type: application/json
 ```
 
@@ -76,7 +73,7 @@ interface ISendVerificationResponseModel {
 ### Get User Info
 
 ```http
-GET /api/v1/user/:id
+GET /api/v1/user/:id HTTP/1.1
 ```
 
 ```typescript
@@ -95,7 +92,7 @@ interface IGetUserInfoResponseModel {
 ### Get Latest Moments Posts
 
 ```http
-GET /api/v1/moments?page=number
+GET /api/v1/moments?page=number HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -105,16 +102,20 @@ interface IMomentsMediaModel {
   content: string[];
 }
 
+interface IMomentsPost {
+  wx_id: string;
+  content: string;
+  media?: IMomentsMediaModel;
+  likes?: string[];
+  comments?: string[];
+  moments_id: string;
+}
+
 interface IGetMomentsResponseModel {
   code: number;
   msg?: string;
   data?: {
-    wx_id: string;
-    content: string;
-    media?: IMomentsMediaModel;
-    likes?: string[];
-    comments?: string[];
-    moments_id: string;
+    posts: IMomentsPost[]
   }
 }
 ```
@@ -122,7 +123,7 @@ interface IGetMomentsResponseModel {
 ### Post Moments
 
 ```http
-POST /api/v1/moments
+POST /api/v1/moments HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -143,7 +144,7 @@ interface IPostMomentsResponseModel {
 ### Delete Moments
 
 ```http
-DELETE /api/v1/moments
+DELETE /api/v1/moments HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -163,7 +164,7 @@ interface IDeleteMomentResponseModel {
 ### Likes
 
 ```http
-POST /api/v1/moments/likes
+POST /api/v1/moments/likes HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -183,7 +184,7 @@ interface ILikeMomentResponseModel {
 ### Comments
 
 ```http
-POST /api/v1/moments/commments
+POST /api/v1/moments/commments HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -208,7 +209,7 @@ interface ICommentMomentResponseModel {
 ### Add Friends
 
 ```http
-POST /api/v1/contact/add
+POST /api/v1/contact/add HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -229,7 +230,7 @@ interface IContactAddResponseModel {
 ### Remarks
 
 ```http
-POST /api/v1/contact/remarks
+POST /api/v1/contact/remarks HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -250,7 +251,7 @@ interface IContactRemarksResponseModel {
 ### Delete Friends
 
 ```http
-POST /api/v1/contact/delete
+POST /api/v1/contact/delete HTTP/1.1
 Authentication: TOKEN
 ```
 
@@ -274,7 +275,7 @@ interface IContactDeleteResponseModel {
 ### Set user profile
 
 ```http
-PUT /api/v1/user/info
+PUT /api/v1/user/info HTTP/1.1
 Authentication: TOKEN
 ```
 

@@ -1,0 +1,72 @@
+.registerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+.title {
+  margin-top: 120px;
+  padding: 20px 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+.upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 44px;
+  background: #f1f1f1;
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.infoWrapper {
+  width: 100%;
+}
+.infoContent {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  margin: 5px 28px;
+  border-top: 1px solid #eaeaea;
+}
+.infoContent:last-child {
+  border-bottom: 1px solid #eaeaea;
+}
+.infoContent span {
+  width: 99px;
+  font-size: 17px;
+  text-align: left;
+}
+.infoContent input {
+  height: 30px;
+  padding: 0;
+  font-size: 16px;
+  border: none;
+  outline: none;
+}
+.infoContent input::placeholder {
+  color: #b7b7b7;
+}
+.nextStep {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 12%;
+  width: 200px;
+  height: 50px;
+  border-radius: 8px;
+  font-size: 17px;
+  color: #f9faf9;
+  background: #58be6b;
+}
+.nextStep:active {
+  background-color: #51aa61;
+}
+.btnDisabled {
+  color: #b7b7b7;
+  background-color: #efefef;
+}

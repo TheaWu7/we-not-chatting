@@ -3,7 +3,8 @@ from typing import Optional
 
 
 class RegisterModel(BaseModel):
-    email: Optional[str]
-    phone: Optional[str]
-    pwd: Optional[str]
-    verification: Optional[str]
+    phone: str
+    pwd: str
+    verification: str
+    nickname: str
+    avatar: Optional[str]

@@ -4,9 +4,5 @@ from typing import Optional
 
 class PhoneLoginModel(BaseModel):
     phone: str
-    verification: str
-
-
-class EmailLoginModel(BaseModel):
-    email: str
-    password: str
+    pwd: Optional[str]
+    verification: Optional[str]
