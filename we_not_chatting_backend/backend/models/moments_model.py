@@ -28,4 +28,14 @@ class MomentsPostModel(BaseModel):
     media: Optional[MomentsMediaModel]
     likes: Optional[List[str]]
     comments: Optional[List[MomentsCommentModel]]
+    time: int
     moments_id: str
+
+
+class LikeMomentModel(BaseModel):
+    moments_id: str
+
+
+class CommentMomentModel(BaseModel):
+    moment_id: str
+    comment: str

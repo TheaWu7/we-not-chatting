@@ -1,10 +1,10 @@
-from backend import app
-from backend.models import RegisterModel, PhoneLoginModel, LoginResponseModel, SimpleResponseModel
+from backend.app import app
+from backend.models import RegisterModel, PhoneLoginModel, LoginResponseModel, SimpleResponseModel, LoginDataModel, GetUserProfileDataModel, GetUserProfileResponseModel
 from fastapi.responses import JSONResponse
 from fastapi import status
 from backend.services.create_user import create_phone_user
 from backend.services.login import phone_login as phone_login_svc
-from backend.apis import MISSING_ARGS_RESPONSE
+from backend.apis.common_response import MISSING_ARGS_RESPONSE
 from backend.database import User
 
 
@@ -14,10 +14,10 @@ def register(data: RegisterModel):
         try:
             create_phone_user(data.phone, data.verification, data.pwd)
             res = SimpleResponseModel(code=0, msg=None)
-            return JSONResponse(res.json())
+            return JSONResponse(res.dict())
         except Exception as e:
             res = SimpleResponseModel(code=-1, msg=str(e))
-            return JSONResponse(res.json(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JSONResponse(res.dict(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return JSONResponse(MISSING_ARGS_RESPONSE, status_code=status.HTTP_400_BAD_REQUEST)
 
@@ -30,29 +30,21 @@ def phone_login(data: PhoneLoginModel):
     data = phone_login_svc(data.phone, data.verification, data.pwd)
     if data is None:
         res = SimpleResponseModel(code=-1, msg="Login Failed")
-        return JSONResponse(res.json())
+        return JSONResponse(res.dict())
 
-    res = LoginResponseModel(code=0, msg=None)
-    res.data.user_id = data[0]
-    res.data.token = data[1]
+    res_data = LoginDataModel(user_id=data[0], token=data[1])
+    res = LoginResponseModel(code=0, msg=None, data=res_data)
 
-    return JSONResponse(res.json())
+    return JSONResponse(res.dict())
 
 
 @app.get("/api/v1/user/{wx_id}")
 def get_user(id: str):
     user = User.get(wx_id=id)
     if user is None:
-        return JSONResponse({
-                "code": -1,
-                "msg": "User Not Found"
-        })
+        res = SimpleResponseModel(code=-1, msg="User Not Found")
+        return JSONResponse(res.dict())
 
-    return JSONResponse({
-            "code": 0,
-            "msg": None,
-            "data": {
-                    "nickname": user.nickname,
-                    "avatar": user.avatar,
-            }
-    })
+    data = GetUserProfileDataModel(avatar=user.avatar, nickname=user.nickname)
+    res = GetUserProfileResponseModel(data=data)
+    return JSONResponse(res.dict())

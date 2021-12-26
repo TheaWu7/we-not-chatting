@@ -4,10 +4,10 @@ from fastapi import Header, Query
 from fastapi.responses import JSONResponse
 from fastapi import status
 from typing import Optional, List
-from backend.models import PostMomentsModel, SimpleResponseModel, DeleteMomentsModel, GetLatestMomentsResponseModel
-from backend.models.moments_model import MomentsPostModel, MomentsMediaModel, MomentsCommentModel
-from backend import app
-from backend.apis import AUTHENTICATION_FAILED_RESPONSE
+from backend.models import PostMomentsModel, SimpleResponseModel, DeleteMomentsModel, GetLatestMomentsResponseModel, GetLatestMomentsDataModel
+from backend.models.moments_model import MomentsPostModel, MomentsMediaModel, MomentsCommentModel, LikeMomentModel, CommentMomentModel
+from backend.app import app
+from backend.apis.common_response import AUTHENTICATION_FAILED_RESPONSE
 from backend.services.authentication import auth_via_token
 from backend.database import Moments, User
 
@@ -30,7 +30,7 @@ def post_moments(data: PostMomentsModel, Autentication: Optional[str] = Header(N
     moment.save()
 
     res = SimpleResponseModel(code=0, msg=None)
-    return JSONResponse(res.json())
+    return JSONResponse(res.dict())
 
 
 @app.delete("/api/v1/moments")
@@ -45,27 +45,83 @@ def delete_moments(data: DeleteMomentsModel, Authentication: Optional[str] = Hea
     Moments.delete_by_id(data.moments_id)
 
     res = SimpleResponseModel(code=0, msg=None)
-    return JSONResponse(res.json())
+    return JSONResponse(res.dict())
 
 
 @app.get("/api/v1/moments")
 def get_latest_moments(offset: Optional[int] = Query(None)):
     try:
         posts: List[Moments] = Moments.select().order_by(Moments.time.desc()).offset(offset).limit(20)
-        res = GetLatestMomentsResponseModel()
+        data = GetLatestMomentsDataModel()
+        data.posts = []
+        res = GetLatestMomentsResponseModel(code=0, data=data)
         for post in posts:
             p = MomentsPostModel()
             p.moments_id = post.id
             p.wx_id = post.poster
-            p.likes = json.loads(post.likes if post.likes is not None else "[]")
-            comments = json.loads(post.comments if post.comments is not None else "[]")
+            p.likes = json.loads(post.likes if post.likes is not None and post.likes != "" else "[]")
+            comments = json.loads(post.comments if post.comments is not None and post.likes != "" else "[]")
             p.comments = []
             for comment in comments:
                 c: MomentsCommentModel = MomentsCommentModel.parse_obj(comment)
                 p.comments.append(c)
 
+            if post.media is not None:
+                media = json.loads(post.media)
+                p.media = MomentsMediaModel.parse_obj(media)
+
+            data.posts.append(p)
+
+        return JSONResponse(res.dict())
 
     except Exception as e:
         res = SimpleResponseModel(code=-1, msg=str(e))
-        return JSONResponse(res, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return JSONResponse(res.dict(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+@app.post("/api/v1/moments/like")
+def like_moments(data: LikeMomentModel, Authentication: Optional[str] = Header(None)):
+    if Authentication is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+    user_id = auth_via_token(Authentication)
+    if user_id is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+
+    post: Moments = Moments.get(id=data.moments_id)
+    if post is None:
+        res = SimpleResponseModel(code=-1, msg="Post Not Found")
+        return JSONResponse(res.dict())
+
+    likes: List[str] = json.loads(post.likes if post.likes is not None and post.likes != "" else "[]")
+    if user_id not in likes:
+        likes.append(user_id)
+
+    res = SimpleResponseModel(code=0)
+    return JSONResponse(res.dict())
+
+
+@app.post("/api/v1/moments/comment")
+def comment_post(data: CommentMomentModel, Autentication: Optional[str] = Header(None)):
+    if Autentication is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+
+    user_id = auth_via_token(Autentication)
+    if user_id is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+
+    post: Moments = Moments.get(id=data.moment_id)
+    if post is None:
+        res = SimpleResponseModel(code=-1, msg="Post Not Found")
+        return JSONResponse(res.dict())
+
+    comments_json: List = json.loads(post.comments if post.comments is not None and post.comments != "" else "[]")
+    comments: List[MomentsCommentModel] = [MomentsCommentModel.parse_obj(c) for c in comments_json]
+    comments.append(MomentsCommentModel(wx_id=user_id, content=data.comment))
+
+    comments_json = [c.dict() for c in comments]
+    post.comments = json.dumps(comments_json)
+
+    post.save()
+
+    res = SimpleResponseModel(code=0)
+    return JSONResponse(res.dict())
