@@ -1,12 +1,13 @@
-.contactsWrapper {
-  display: flex;
-  flex-direction: column;
+.ContactsWrapper {
+  height: 100%;
 }
 .topbarWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   position: sticky;
+  top: 0;
+  width: 100%;
   height: 49px;
   background: #ededed;
 }
@@ -18,4 +19,46 @@
   position: absolute;
   right: 15px;
   vertical-align: middle;
+}
+.contactItemWrapper {
+  height: calc(100% - 49px);
+  overflow: auto;
+}
+
+/* for add friends */
+.contactItemContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 60px;
+}
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  width: 37px;
+  height: 37px;
+  margin: 0 12px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #eda04d;
+}
+.nickname {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+  padding-right: 12px;
+  color: #171717;
+  text-align: left;
+}
+
+.seperator {
+  padding: 6px 0 6px 12px;
+  color: #5b5b5b;
+  background: #ededed;
+  text-align: left;
+  border-bottom: 1px solid #e8e8e8;
 }

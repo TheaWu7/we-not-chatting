@@ -11,7 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
+p {
+  margin: 0;
+}
 .wx_button {
   display: flex;
   justify-content: center;

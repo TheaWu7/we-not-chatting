@@ -1,0 +1,25 @@
+.contactItemWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 60px;
+}
+.avatar {
+  flex: none;
+  width: 37px;
+  height: 37px;
+  margin: 0 12px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.nickname {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+  padding-right: 12px;
+  color: #171717;
+  border-bottom: 1px solid #eaeaea;
+  text-align: left;
+}
