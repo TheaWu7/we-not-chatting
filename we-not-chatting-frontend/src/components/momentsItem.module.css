@@ -1,0 +1,73 @@
+.momentsItemWrapper {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  padding: 15px;
+  border-bottom: 1px solid #eaeaea;
+}
+.avatar {
+  flex: none;
+  width: 47px;
+  height: 47px;
+  margin-right: 12px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.momentContent {
+  width: 100%;
+  text-align: left;
+}
+.nickname {
+  margin-bottom: 5px;
+  color: #6a7797;
+  font-size: 18px;
+  font-weight: 700;
+}
+.content p {
+  font-size: 16px;
+}
+.info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.time {
+  color: #c1c1c1;
+  font-size: 14px;
+}
+.dots {
+  width: 32px;
+  height: 18px;
+  color: #6a7797;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 5px;
+}
+.actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  bottom: 4px;
+  right: 55px;
+  width: 176px;
+  height: 36px;
+  color: #fff;
+  background: #555555;
+  border-radius: 5px;
+}
+.actionsItem {
+  display: flex;
+  justify-content: center;
+  width: 88px;
+  font-size: 15px;
+  border-right: 1px solid #444;
+}
+.likes {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 5px;
+  background: #efefef;
+  border-radius: 5px;
+}

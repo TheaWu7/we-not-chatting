@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ContactItem from "../../components/contactItem";
 import style from "./contacts.module.css";
 
@@ -6,15 +7,16 @@ export default function Contacts() {
     <div className={style.ContactsWrapper}>
       <div className={style.topbarWrapper}>
         <span className={style.topTitle}>通讯录</span>
-        <img
+        <Link
+          to="/addFriends"
+          style={{ textDecoration: "none" }}
           className={style.topImg}
-          src="/assets/friends_add.svg"
-          width="24px"
-          alt=""
-        />
+        >
+          <img src="/assets/friends_add.svg" width="24px" alt="" />
+        </Link>
       </div>
       <div className={style.contactItemWrapper}>
-        <div className={style.contactItemContainer}>
+        <Link to="/newFriends" className={style.newFriendsContainer}>
           <div className={style.avatar}>
             <img
               src="/assets/addfriends.svg"
@@ -24,7 +26,7 @@ export default function Contacts() {
             />
           </div>
           <div className={style.nickname}>新的朋友</div>
-        </div>
+        </Link>
         <p className={style.seperator}>Friends</p>
         <ContactItem />
         <ContactItem />

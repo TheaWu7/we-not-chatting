@@ -1,0 +1,28 @@
+.momentsWrapper {
+  position: relative;
+}
+.bgTopWrapper {
+  position: relative;
+  height: 414px;
+}
+.nickname {
+  position: absolute;
+  bottom: 12px;
+  right: 88px;
+  z-index: 1;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+}
+.avatar {
+  position: absolute;
+  top: 360px;
+  right: 12px;
+  width: 66px;
+  height: 66px;
+  border-radius: 7px;
+  overflow: hidden;
+}
+.momentsItemWrapper {
+  margin-top: 50px;
+}

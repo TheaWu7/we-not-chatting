@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Link } from "react-router-dom";
 import style from "./tabBar.module.css";
 import { useLocation } from "react-router-dom";
@@ -44,7 +44,11 @@ export default function TabBar() {
             }`}
             key={v.name}
           >
-            <img src={pathname === v.url ? v.iconClick : v.icon} width="28px" />
+            <img
+              src={pathname === v.url ? v.iconClick : v.icon}
+              width="28px"
+              alt={v.name}
+            />
             <span>{v.name}</span>
           </Link>
         );

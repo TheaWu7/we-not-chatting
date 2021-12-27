@@ -14,6 +14,16 @@ code {
 p {
   margin: 0;
 }
+
+input {
+  outline: none;
+}
+Link {
+  text-decoration: none;
+}
+button {
+  border: none;
+}
 .wx_button {
   display: flex;
   justify-content: center;

@@ -6,7 +6,7 @@ export default function Profile() {
   return (
     <div className={style.profileWrapper}>
       <div className={style.avatar}>
-        <img src={avatarUrl} width="100%" />
+        <img src={avatarUrl} width="100%" alt="avator" />
       </div>
       <div className={style.infoWrapper}>
         <div className={style.idContainer}>

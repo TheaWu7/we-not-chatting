@@ -1,4 +1,4 @@
-.chatsWrapper {
+.newFriendsWrapper {
   height: 100%;
 }
 .topbarWrapper {
@@ -9,23 +9,26 @@
   top: 0;
   width: 100%;
   height: 49px;
+  z-index: 1;
   background: #ededed;
-  flex: none;
   border-bottom: 1px solid #ebebeb;
+}
+.topbarWrapper img {
+  position: absolute;
+  left: 12px;
 }
 .topTitle {
   font-size: 18px;
   font-weight: 600;
 }
-.topImg {
+.addNew {
   position: absolute;
-  right: 15px;
-  vertical-align: middle;
+  right: 12px;
+  font-size: 15px;
+  color: #333;
+  text-decoration: none;
 }
-.chatItemWrapper {
-  height: calc(100% - 49px);
+.newFriendsItemWrapper {
+  height: calc(100vh - 50px);
   overflow: auto;
-}
-.popup {
-  background: #4c4c4c;
 }

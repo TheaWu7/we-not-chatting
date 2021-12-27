@@ -1,0 +1,47 @@
+.addFriendsWrapper {
+}
+.topbarWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  height: 49px;
+  background: #ededed;
+}
+.topbarWrapper img {
+  position: absolute;
+  left: 12px;
+  vertical-align: middle;
+}
+.topTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+.searchBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+.searchBar p {
+  margin: 20px 0 10px 0;
+  font-size: 19px;
+}
+.searchBar button {
+  margin-top: 15px;
+  font-size: 15px;
+  color: slategray;
+  border: none;
+  background: #fff;
+  text-decoration: underline;
+}
+.searchBarInput {
+  width: 240px;
+  height: 35px;
+  font-size: 17px;
+  text-align: center;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+}

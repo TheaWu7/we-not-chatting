@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import style from "./discover.module.css";
 
 export default function Discover() {
@@ -6,7 +7,7 @@ export default function Discover() {
       <div className={style.topbarWrapper}>
         <span className={style.topTitle}>发 现</span>
       </div>
-      <div className={style.moments}>
+      <Link to="/moments" className={style.moments}>
         <div className={style.content}>
           <img
             src="/assets/moment.svg"
@@ -22,7 +23,7 @@ export default function Discover() {
           width="25px"
           style={{ marginRight: "12px" }}
         />
-      </div>
+      </Link>
     </div>
   );
 }
