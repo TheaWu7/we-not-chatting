@@ -36,7 +36,10 @@
   font-size: 14px;
 }
 .dots {
-  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
   height: 18px;
   color: #6a7797;
   font-size: 15px;

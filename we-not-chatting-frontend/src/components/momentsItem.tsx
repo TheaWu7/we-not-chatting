@@ -35,7 +35,9 @@ export default function MomentsItem() {
               setShowActions(!showActions);
             }}
           >
-            <button className={style.dots}>··</button>
+            <button className={style.dots}>
+              <img src="/assets/dots.svg" alt="" width="15px" />
+            </button>
             <div className={style.actions}>
               {showActions ? (
                 <MomentsActions onLike={() => setShowLike((l) => !l)} />
