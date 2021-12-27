@@ -1,4 +1,5 @@
 import { useState } from "react";
+import MomentsActions from "./momentsActions";
 import style from "./momentsItem.module.css";
 
 export default function MomentsItem() {
@@ -28,42 +29,20 @@ export default function MomentsItem() {
         </div>
         <div className={style.info}>
           <span className={style.time}>3小时前</span>
-          <button
-            className={style.dots}
+          <div
+            className={style.actionsWrapper}
             onClick={() => {
               setShowActions(!showActions);
             }}
           >
-            ··
-          </button>
-        </div>
-        {showActions ? (
-          <div className={style.actions}>
-            {/* {actionsList.map((v) => {
-              return (
-                <div className={style.actionsItem}>
-                  <img src={v.url} alt="" width="19px" />
-                  <span>{v.name}</span>
-                </div>
-              );
-            })} */}
-            <div
-              className={style.actionsItem}
-              onClick={() => {
-                setShowLike(!showLike);
-              }}
-            >
-              <img src="/assets/like.svg" alt="" width="19px" />
-              <span>赞</span>
-            </div>
-            <div className={style.actionsItem}>
-              <img src="/assets/comment.svg" alt="" width="19px" />
-              <span>评论</span>
+            <button className={style.dots}>··</button>
+            <div className={style.actions}>
+              {showActions ? (
+                <MomentsActions onLike={() => setShowLike((l) => !l)} />
+              ) : null}
             </div>
           </div>
-        ) : (
-          ""
-        )}
+        </div>
         {showLike ? (
           <div className={style.likes}>
             <img

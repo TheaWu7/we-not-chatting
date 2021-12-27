@@ -43,25 +43,14 @@
   font-weight: 700;
   border-radius: 5px;
 }
-.actions {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: absolute;
-  bottom: 4px;
-  right: 55px;
-  width: 176px;
-  height: 36px;
-  color: #fff;
-  background: #555555;
-  border-radius: 5px;
+.actionsWrapper {
+  position: relative;
 }
-.actionsItem {
-  display: flex;
-  justify-content: center;
-  width: 88px;
-  font-size: 15px;
-  border-right: 1px solid #444;
+.actions {
+  position: absolute;
+  right: 40px;
+  top: -50%;
+  transform: translateY(2px);
 }
 .likes {
   display: flex;

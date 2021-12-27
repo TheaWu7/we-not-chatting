@@ -1,0 +1,16 @@
+.actions {
+  display: flex;
+  align-items: center;
+  width: 176px;
+  height: 36px;
+  color: #fff;
+  background: #555555;
+  border-radius: 5px;
+}
+.actionsItem {
+  display: flex;
+  justify-content: center;
+  width: 88px;
+  font-size: 15px;
+  border-right: 1px solid #444;
+}
