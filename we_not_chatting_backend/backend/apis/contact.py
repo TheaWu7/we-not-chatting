@@ -37,12 +37,13 @@ def get_contact(Authentication: Optional[str] = Header(None)):
 
     friends = Contact.select().where(Contact.owner==user_id).join(User, on=(Contact.friend == User.id))
 
-    res_friends = []
-    res_data = GetUserContactDataModel(friends=res_friends)
+    res_data = GetUserContactDataModel(friends=[])
 
-    for friend in friends:
-        f = GetUserProfileDataModel(wx_id=friend.wx_id, avatar=friend.avatar, nickname=friend.nickname, remarks=friend.remarks)
-        res_friends.append(f)
+    contact: Contact
+    for contact in friends:
+        friend = contact.friend
+        f = GetUserProfileDataModel(wx_id=friend.wx_id, avatar=friend.avatar, nickname=friend.nickname, remarks=contact.remarks)
+        res_data.friends.append(f)
 
     res = GetUserContactResponseModel(data=res_data)
 

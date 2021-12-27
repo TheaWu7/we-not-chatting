@@ -9,7 +9,7 @@ def create_phone_user(phone: str, verification: str, pwd: str, nickname: str, av
     if not verify_verification_code(phone, verification):
         raise VerificationFailedException()
 
-    user = User.get(phone=phone)
+    user = User.get_or_none(phone=phone)
     if user is not None:
         raise UserExistsWithSamePhone()
 
