@@ -23,7 +23,7 @@
   vertical-align: middle;
 }
 .chatItemWrapper {
-  height: calc(100% - 49px);
+  height: calc(100% - 50px);
   overflow: auto;
 }
 .popup {
