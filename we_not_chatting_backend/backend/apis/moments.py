@@ -1,5 +1,7 @@
 import json
+import time
 
+import nanoid
 from fastapi import Header, Query
 from fastapi.responses import JSONResponse
 from fastapi import status
@@ -13,20 +15,23 @@ from backend.database import Moments, User
 
 
 @app.post("/api/v1/moments")
-def post_moments(data: PostMomentsModel, Autentication: Optional[str] = Header(None)):
-    if Autentication is None:
+def post_moments(data: PostMomentsModel, Authentication: Optional[str] = Header(None)):
+    if Authentication is None:
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
 
-    user_id = auth_via_token(Autentication)
+    user_id = auth_via_token(Authentication)
     if user_id is None:
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
 
     user = User.get(id=user_id)
 
-    moment = Moments.create()
-    moment.content = data.content
-    moment.media = data.media.json()
-    moment.poster = user
+    moment = Moments.create(id=nanoid.generate(size=21),
+                            content=data.content,
+                            media=data.media.json() if data.media is not None else None,
+                            poster=user.id,
+                            likes="[]",
+                            comments="[]",
+                            time=time.time())
     moment.save()
 
     res = SimpleResponseModel(code=0, msg=None)
@@ -56,11 +61,13 @@ def get_latest_moments(offset: Optional[int] = Query(None)):
         data.posts = []
         res = GetLatestMomentsResponseModel(code=0, data=data)
         for post in posts:
-            p = MomentsPostModel()
-            p.moments_id = post.id
-            p.wx_id = post.poster
-            p.likes = json.loads(post.likes if post.likes is not None and post.likes != "" else "[]")
             comments = json.loads(post.comments if post.comments is not None and post.likes != "" else "[]")
+            p = MomentsPostModel(moments_id=post.id,
+                                 wx_id=post.poster.wx_id,
+                                 likes=json.loads(post.likes if post.likes is not None and post.likes != "" else "[]"),
+                                 content=post.content,
+                                 time=post.time
+                                )
             p.comments = []
             for comment in comments:
                 c: MomentsCommentModel = MomentsCommentModel.parse_obj(comment)
@@ -87,7 +94,7 @@ def like_moments(data: LikeMomentModel, Authentication: Optional[str] = Header(N
     if user_id is None:
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
 
-    post: Moments = Moments.get(id=data.moments_id)
+    post: Moments = Moments.get_or_none(id=data.moments_id)
     if post is None:
         res = SimpleResponseModel(code=-1, msg="Post Not Found")
         return JSONResponse(res.dict())
@@ -95,21 +102,23 @@ def like_moments(data: LikeMomentModel, Authentication: Optional[str] = Header(N
     likes: List[str] = json.loads(post.likes if post.likes is not None and post.likes != "" else "[]")
     if user_id not in likes:
         likes.append(user_id)
+    post.likes = json.dumps(likes)
+    post.save()
 
     res = SimpleResponseModel(code=0)
     return JSONResponse(res.dict())
 
 
 @app.post("/api/v1/moments/comment")
-def comment_post(data: CommentMomentModel, Autentication: Optional[str] = Header(None)):
-    if Autentication is None:
+def comment_post(data: CommentMomentModel, Authentication: Optional[str] = Header(None)):
+    if Authentication is None:
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
 
-    user_id = auth_via_token(Autentication)
+    user_id = auth_via_token(Authentication)
     if user_id is None:
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
 
-    post: Moments = Moments.get(id=data.moment_id)
+    post: Moments = Moments.get_or_none(id=data.moment_id)
     if post is None:
         res = SimpleResponseModel(code=-1, msg="Post Not Found")
         return JSONResponse(res.dict())

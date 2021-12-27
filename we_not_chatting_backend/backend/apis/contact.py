@@ -8,6 +8,7 @@ from backend.models.friends_model import SendFriendRequestModel
 from backend.apis.common_response import AUTHENTICATION_FAILED_RESPONSE
 from backend.services.authentication import auth_via_token
 from backend.database import Contact, User
+from backend.models.friends_model import SetFriendRemarksModel
 
 
 @app.post("/api/v1/friends/request")
@@ -45,4 +46,22 @@ def get_contact(Authentication: Optional[str] = Header(None)):
 
     res = GetUserContactResponseModel(data=res_data)
 
+    return JSONResponse(res.dict())
+
+
+@app.post("/api/v1/friends/remarks")
+def set_friend_remarks(data: SetFriendRemarksModel, Authentication: Optional[str] = Header(None)):
+    if Authentication is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+
+    user_id = auth_via_token(Authentication)
+    if user_id is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+
+    contact = Contact.select(Contact, User).join(User, on=(Contact.friend == User.id)).where(wx_id=data.wx_id).limit(1)
+
+    for c in contact:
+        c.remarks = data.remarks
+
+    res = SimpleResponseModel(code=0)
     return JSONResponse(res.dict())

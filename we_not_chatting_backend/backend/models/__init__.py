@@ -2,3 +2,4 @@ from .register_model import RegisterModel
 from .login_model import PhoneLoginModel
 from .response_model import SimpleResponseModel, LoginResponseModel, GetLatestMomentsResponseModel, GetLatestMomentsDataModel, LoginDataModel, GetUserProfileDataModel, GetUserProfileResponseModel
 from .moments_model import PostMomentsModel, MomentsMediaModel, DeleteMomentsModel, LikeMomentModel, CommentMomentModel
+from .user_profile_model import UpdateUserProfileModel

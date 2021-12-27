@@ -14,4 +14,4 @@ def send_verification(data: SendVerificationModel):
     code = send_verification_code(data.phone)
     print(f"verification code: {code}")
     res = SimpleResponseModel(code=0, msg=None)
-    return JSONResponse(res.json())
+    return JSONResponse(res.dict())
