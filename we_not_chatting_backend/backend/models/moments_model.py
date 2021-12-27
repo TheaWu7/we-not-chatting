@@ -25,9 +25,9 @@ class MomentsCommentModel(BaseModel):
 class MomentsPostModel(BaseModel):
     wx_id: str
     content: str
-    media: Optional[MomentsMediaModel]
-    likes: Optional[List[str]]
-    comments: Optional[List[MomentsCommentModel]]
+    media: Optional[MomentsMediaModel] = None
+    likes: Optional[List[str]] = None
+    comments: Optional[List[MomentsCommentModel]] = None
     time: int
     moments_id: str
 

@@ -7,4 +7,4 @@ class RegisterModel(BaseModel):
     pwd: str
     verification: str
     nickname: str
-    avatar: Optional[str]
+    avatar: str

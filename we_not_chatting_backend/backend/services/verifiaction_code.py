@@ -1,4 +1,6 @@
 from random import randint
+from typing import Optional
+
 from backend import verification_cache
 
 def send_verification_code(phone: str) -> str:
@@ -8,7 +10,11 @@ def send_verification_code(phone: str) -> str:
 
 
 def verify_verification_code(phone: str, code: str) -> bool:
-    correct_code = verification_cache.get(phone)
+    correct_code: Optional[bytes] = verification_cache.get(phone)
     if correct_code is None:
         return False
-    return correct_code == code
+    passed = correct_code.decode() == code
+    if passed:
+        verification_cache.delete(phone)
+
+    return passed
