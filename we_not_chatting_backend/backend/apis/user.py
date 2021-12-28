@@ -9,6 +9,8 @@ from backend.app import app
 from backend.database import User, Contact
 from backend.models import RegisterModel, PhoneLoginModel, LoginResponseModel, SimpleResponseModel, LoginDataModel, \
     GetUserProfileDataModel, GetUserProfileResponseModel, UpdateUserProfileModel
+from backend.models.user_profile_model import GetUserMomentsBgModel
+from backend.models.response_model import UserMomentsBgDataModel, GetUserMomentsBgResponseModel
 from backend.services.authentication import auth_via_token
 from backend.services.create_user import create_phone_user
 from backend.services.login import phone_login as phone_login_svc
@@ -77,6 +79,34 @@ def get_user(wx_id: str, Authentication: Optional[str] = Header(None)):
 
     data = GetUserProfileDataModel(avatar=user.avatar, nickname=user.nickname, wx_id=user.wx_id, remarks=remark)
     res = GetUserProfileResponseModel(data=data)
+    return JSONResponse(res.dict())
+
+
+@app.get("/api/v1/user/moments_bg/{user_id}")
+def get_user_moments_bg(user_id: str):
+    user = User.get_or_none(wx_id=user_id)
+    if user is None:
+        res = SimpleResponseModel(code=404, msg="User Not Found")
+        return JSONResponse(res.dict())
+
+    res = GetUserMomentsBgResponseModel(data=UserMomentsBgDataModel(moments_bg=user.moments_bg))
+    return JSONResponse(res.dict())
+
+
+@app.post("/api/v1/user/moments_bg")
+def set_user_moments_bg(data: UserMomentsBgDataModel, Authentication: Optional[str] = Header(None)):
+    if Authentication is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+
+    user_id = auth_via_token(Authentication)
+    if user_id is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+
+    user = User.get(id=user_id)
+    user.moments_bg = data.moments_bg
+    user.save()
+
+    res = SimpleResponseModel()
     return JSONResponse(res.dict())
 
 

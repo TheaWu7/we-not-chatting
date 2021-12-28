@@ -53,3 +53,13 @@ class GetUserContactResponseModel(BaseModel):
     code: int = 0
     msg: Optional[str] = None
     data: GetUserContactDataModel
+
+
+class UserMomentsBgDataModel(BaseModel):
+    moments_bg: Optional[str]
+
+
+class GetUserMomentsBgResponseModel(BaseModel):
+    code: int=0
+    msg: Optional[str] = None
+    data: UserMomentsBgDataModel
