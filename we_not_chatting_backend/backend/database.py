@@ -1,4 +1,4 @@
-from peewee import Model, MySQLDatabase, CharField, TextField, ForeignKeyField, IntegerField, SmallIntegerField
+from peewee import Model, MySQLDatabase, CharField, TextField, ForeignKeyField, IntegerField, SmallIntegerField, BooleanField
 
 
 db = MySQLDatabase("WeNotChatting")
@@ -45,4 +45,11 @@ class ChatHistory(BaseModel):
     time = IntegerField()
     content = TextField()
     content_type = SmallIntegerField()
+    sent = BooleanField(default=True)
 
+
+class Files(BaseModel):
+    id = CharField(max_length=32, primary_key=True)
+    storage_name = CharField(max_length=21)
+    file_name = CharField()
+    type = CharField()

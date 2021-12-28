@@ -2,6 +2,7 @@ from random import randint
 from typing import Optional
 
 from backend import verification_cache
+from backend.sms import send_verification_sms
 
 def send_verification_code(phone: str) -> str:
     code = str(randint(0, 999999)).zfill(6)
