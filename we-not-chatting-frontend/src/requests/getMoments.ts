@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { GetMomentsResponseModel, IGetMomentsResponseDataModel } from "../models/getMoments";
 
 export async function getMoments(): Promise<IGetMomentsResponseDataModel | null> {
@@ -9,13 +9,13 @@ export async function getMoments(): Promise<IGetMomentsResponseDataModel | null>
     });
     const data: GetMomentsResponseModel = res.data;
     if (data.code !== 0) {
-      message.error(data.msg);
+      toast.error(data.msg);
       return null;
     } else {
       return data.data!;
     }
   } catch (error) {
-    message.error("err");
+    toast.error("err");
     return null;
   }
 }

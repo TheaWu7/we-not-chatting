@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { ILoginResponseDataModel, LoginResponseModel } from "../models/login";
 
 export async function login(phone: string, verification: string): Promise<ILoginResponseDataModel | null> {
@@ -15,7 +15,7 @@ export async function login(phone: string, verification: string): Promise<ILogin
     const data: LoginResponseModel = res.data;
     if (data.code !== 0) {
       // 错误处理
-      message.error(data.msg);
+      toast.error(data.msg);
       return null;
     } else {
       return data.data!

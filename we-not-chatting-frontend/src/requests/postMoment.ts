@@ -1,26 +1,29 @@
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { IBaseResponseModel } from "../models/baseModel";
 import { postMomentResponseModel } from "../models/postMoment";
 
-export async function postMoment(content: string, media: string): Promise<IBaseResponseModel<null> | null> {
+export async function postMoment(content: string, media_type: number, media_content: string[]): Promise<IBaseResponseModel<null> | null> {
   try {
     const res = await globalThis.axios({
       url: "/moments",
       method: "POST",
       data: {
         content,
-        media
+        media: {
+          type: media_type,
+          content: media_content
+        }
       }
     });
     const data: postMomentResponseModel = res.data;
     if (data.code !== 0) {
-      message.error(data.msg);
+      toast.error(data.msg);
       return null;
     } else {
       return data.data!
     }
   } catch (error) {
-    message.error("error");
+    toast.error("error");
     return null;
   }
 }

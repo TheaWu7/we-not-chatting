@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { IBaseResponseModel } from "../models/baseModel";
 import { VerificationResponseModel } from "../models/verification";
 
@@ -15,14 +15,14 @@ export async function verification_sms(phone: string): Promise<IBaseResponseMode
     const data: VerificationResponseModel = res.data;
     if (data.code !== 0) {
       // 错误处理
-      message.error(data.msg);
+      toast.error(data.msg);
       return null;
     } else {
       return data.data!
     }
   } catch (error: any) {
     console.log(error)
-    message.error("asdfsdf");
+    toast.error("asdfsdf");
     return null;
   }
 }

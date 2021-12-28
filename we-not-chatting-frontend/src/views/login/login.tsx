@@ -44,7 +44,6 @@ export default function Login() {
               <input
                 type="text"
                 placeholder={v.placeholder}
-                style={{ width: "148px" }}
                 value={v.state}
                 onChange={(e) => v.setState(e.target.value)}
               />

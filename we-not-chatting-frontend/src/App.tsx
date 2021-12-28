@@ -10,6 +10,7 @@ import Login from "./views/login/login";
 import NewFriends from "./views/newFriends/newFriends";
 import AddFriends from "./views/addFriends/addFriends";
 import Moments from "./views/moments/moments";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -29,6 +30,13 @@ function App() {
           <Route path="/moments" element={<Moments />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        autoClose={2500}
+        hideProgressBar
+        newestOnTop={false}
+        rtl={false}
+      />
     </div>
   );
 }

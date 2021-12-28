@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { FriendsResponseModel, IFriendsResponseDataModel } from "../models/friends";
 
 export async function getFriends(): Promise<IFriendsResponseDataModel | null> {
@@ -9,13 +9,13 @@ export async function getFriends(): Promise<IFriendsResponseDataModel | null> {
     })
     const data: FriendsResponseModel = res.data;
     if (data.code !== 0) {
-      message.error(data.msg);
+      toast.error(data.msg);
       return null;
     } else {
       return data.data!
     }
   } catch (error) {
-    message.error("error");
+    toast.error("error");
     return null;
   }
 

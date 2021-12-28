@@ -1,9 +1,11 @@
 import style from "./addFriends.module.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AddFriends() {
   const navigate = useNavigate();
-
+  function handleSearch() {
+    // search by phone/id
+  }
   return (
     <div className={style.addFriendsWrapper}>
       <div className={style.topbarWrapper}>
@@ -18,9 +20,19 @@ export default function AddFriends() {
         <span className={style.topTitle}>添加朋友</span>
       </div>
       <div className={style.searchBar}>
-        <p>请输入好友ID: </p>
+        <p>
+          <img
+            src="/assets/search.svg"
+            alt=""
+            width="25px"
+            style={{ marginRight: "5px" }}
+          />
+          手机号 / ID:
+        </p>
         <input type="text" className={style.searchBarInput} />
-        <button>done</button>
+        <Link to="/userProfile">
+          <button onClick={handleSearch}>done</button>
+        </Link>
       </div>
     </div>
   );

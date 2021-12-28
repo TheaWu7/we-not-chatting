@@ -9,12 +9,7 @@ export default function Discover() {
       </div>
       <Link to="/moments" className={style.moments}>
         <div className={style.content}>
-          <img
-            src="/assets/moment.svg"
-            alt=""
-            width="28px"
-            style={{ padding: "0 12px" }}
-          />
+          <img src="/assets/moment.svg" alt="" width="28px" />
           <span>Moments</span>
         </div>
         <img

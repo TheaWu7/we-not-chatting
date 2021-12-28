@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { IBaseResponseModel } from "../models/baseModel";
 import { likeMomentsResponseModel } from "../models/likeMoments";
 
@@ -10,14 +10,14 @@ export async function likeMoments(): Promise<IBaseResponseModel<null> | null> {
     });
     const data: likeMomentsResponseModel = res.data;
     if (data.code !== 0) {
-      message.error(data.msg);
+      toast.error(data.msg);
       return null;
     } else {
       return data.data!;
     }
   } catch (error) {
     console.log(error)
-    message.error("error");
+    toast.error("error");
     return null;
   }
 }

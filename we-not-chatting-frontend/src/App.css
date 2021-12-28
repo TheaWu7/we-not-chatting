@@ -25,13 +25,6 @@
   color: white;
 }
 
-/* .App-link {
-  color: #61dafb;
-} */
-
-a:hover {
-  color: unset;
-}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

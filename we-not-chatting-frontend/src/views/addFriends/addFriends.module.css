@@ -25,6 +25,8 @@
   margin-top: 20px;
 }
 .searchBar p {
+  display: flex;
+  align-items: center;
   margin: 20px 0 10px 0;
   font-size: 19px;
 }

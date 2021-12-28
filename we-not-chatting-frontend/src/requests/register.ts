@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { IBaseResponseModel } from "../models/baseModel";
 import { RegisterResponseModel } from "../models/register";
 
@@ -18,14 +18,14 @@ export async function register(avatar: string, nickname: string, phone: string, 
     const data: RegisterResponseModel = res.data;
     if (data.code !== 0) {
       // 错误处理
-      message.error(data.msg);
+      toast.error(data.msg);
       return null;
     } else {
       return data.data!
     }
   } catch (error: any) {
     console.log(error)
-    message.error("出错啦");
+    toast.error("出错啦");
     return null;
   }
 }
