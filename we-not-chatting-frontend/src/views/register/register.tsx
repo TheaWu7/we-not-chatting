@@ -1,4 +1,5 @@
 import React, { useState, createRef } from "react";
+import { register } from "../../requests/register";
 import style from "./register.module.css";
 
 export default function Register() {
@@ -50,6 +51,9 @@ export default function Register() {
       setAvatarDataUrl(bufferUrl);
     }
   }
+  async function handleRegister() {
+    register(avatarDataUrl!, nickname, phone, pwd);
+  }
 
   return (
     <div className={style.registerWrapper}>
@@ -93,6 +97,7 @@ export default function Register() {
           hasFinished() ? "" : style.btnDisabled
         }`}
         disabled={hasFinished() ? false : true}
+        onClick={handleRegister}
       >
         下一步
       </button>

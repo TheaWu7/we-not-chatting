@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { ILoginResponseDataModel, LoginResponseModel } from "../models/login";
 
-export async function login_sms(phone: string, verification: string): Promise<ILoginResponseDataModel | null> {
+export async function login(phone: string, verification: string): Promise<ILoginResponseDataModel | null> {
   try {
     const res = await globalThis.axios({
       url: "/user/login/phone",

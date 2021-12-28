@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { login_sms } from "../../requests/login";
+import { login } from "../../requests/login";
 import { verification_sms } from "../../requests/verification";
 import style from "./login.module.css";
 
@@ -11,7 +11,7 @@ export default function Login() {
     return phone && verification;
   }
   async function handleLogin() {
-    login_sms(phone, verification);
+    login(phone, verification);
   }
   async function handleVerification() {
     console.log("send verification code");

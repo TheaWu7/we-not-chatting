@@ -49,7 +49,9 @@ export default function TabBar() {
               width="28px"
               alt={v.name}
             />
-            <span>{v.name}</span>
+            <span style={pathname === v.url ? { color: "#58be6b" } : undefined}>
+              {v.name}
+            </span>
           </Link>
         );
       })}
