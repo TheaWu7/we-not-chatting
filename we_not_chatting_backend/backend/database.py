@@ -18,6 +18,7 @@ class User(BaseModel):
     password = CharField(null=True)
     nickname = CharField(max_length=15)
     avatar = TextField()
+    moments_bg = TextField()
     wx_id = CharField(max_length=32)
 
 

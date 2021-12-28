@@ -1,5 +1,5 @@
 import time
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 import nanoid
 from fastapi import WebSocket, WebSocketDisconnect
@@ -82,7 +82,7 @@ class ConnectionManager:
     async def delete_friend(self, data: DeleteFriendModel):
         await self.send_if_connected(data, to=data.delete_id)
 
-    async def broadcast(self, to: list[str], data: RealTimeEventBaseModel):
+    async def broadcast(self, to: List[str], data: RealTimeEventBaseModel):
         for item in to:
             await self.send_if_connected(data, to=item)
 
