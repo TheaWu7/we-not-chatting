@@ -8,13 +8,13 @@ from backend.apis.common_response import MISSING_ARGS_RESPONSE
 from backend.app import app
 from backend.database import User, Contact
 from backend.models import RegisterModel, PhoneLoginModel, LoginResponseModel, SimpleResponseModel, LoginDataModel, \
-    GetUserProfileDataModel, GetUserProfileResponseModel, UpdateUserProfileModel
-from backend.models.user_profile_model import GetUserMomentsBgModel
+    GetUserProfileResponseModel, UpdateUserProfileModel
 from backend.models.response_model import UserMomentsBgDataModel, GetUserMomentsBgResponseModel
 from backend.services.authentication import auth_via_token
 from backend.services.create_user import create_phone_user
 from backend.services.login import phone_login as phone_login_svc
 from backend.services.update_user_profile import update_user_profile, UserNotFoundException
+from backend.services.get_user import get_user as get_user_svc
 from backend.exceptions import VerificationFailedException, UserExistsWithSamePhone
 
 
@@ -67,17 +67,11 @@ def get_user(wx_id: str, Authentication: Optional[str] = Header(None)):
     if user_id is None:
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
 
-    user = User.get_or_none(wx_id=wx_id)
-    if user is None:
-        res = SimpleResponseModel(code=-1, msg="User Not Found")
+    data = get_user_svc(wx_id, user_id)
+    if data is None:
+        res = SimpleResponseModel(code=404, msg="User Not Found")
         return JSONResponse(res.dict())
 
-    friend = Contact.get_or_none(owner=user_id, friend=user)
-    remark = None
-    if friend is not None:
-        remark = friend.remarks
-
-    data = GetUserProfileDataModel(avatar=user.avatar, nickname=user.nickname, wx_id=user.wx_id, remarks=remark)
     res = GetUserProfileResponseModel(data=data)
     return JSONResponse(res.dict())
 
@@ -127,3 +121,16 @@ def update_profile(data: UpdateUserProfileModel, Authentication: Optional[str] =
     except UserNotFoundException:
         res = SimpleResponseModel(code=-1, msg="User Not Found")
         return JSONResponse(res.dict())
+
+
+@app.get("/api/v1/user/search/{info}")
+def search_user(info: str):
+    user = User.select().where((User.phone == info) | (User.wx_id == info)).get_or_none()
+    if user is None:
+        res = SimpleResponseModel(code=404, msg="User Not Found")
+        return JSONResponse(res.dict())
+
+    data = get_user_svc(user.wx_id)
+
+    res = GetUserProfileResponseModel(data=data)
+    return JSONResponse(res.dict())
