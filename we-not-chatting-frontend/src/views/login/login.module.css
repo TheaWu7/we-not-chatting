@@ -39,11 +39,12 @@
 }
 .infoContent span {
   flex: none;
-  width: 78px;
+  width: 90px;
   font-size: 17px;
   text-align: left;
 }
 .infoContent input {
+  width: 174px;
   height: 30px;
   padding: 0;
   font-size: 16px;
@@ -56,11 +57,16 @@
 .getVerify {
   flex: none;
   height: 36px;
-  padding: 0 12px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #666;
 }
-.nextStep {
+.linkWrapper {
+  text-decoration: none;
   position: absolute;
   bottom: 12%;
+}
+.nextStep {
   width: 200px;
   height: 50px;
   font-size: 17px;
@@ -69,4 +75,8 @@
 }
 .nextStep:active {
   background-color: #51aa61;
+}
+.btnDisabled {
+  color: #b7b7b7;
+  background-color: #efefef;
 }

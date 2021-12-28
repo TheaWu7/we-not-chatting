@@ -1,4 +1,7 @@
 import React, { useState, createRef } from "react";
+import { verification_sms } from "../../requests/verification";
+import { register } from "../../requests/register";
+import { Link } from "react-router-dom";
 import style from "./register.module.css";
 
 export default function Register() {
@@ -9,6 +12,7 @@ export default function Register() {
   const [avatarDataUrl, setAvatarDataUrl] = useState<string | undefined>(
     undefined
   );
+  const [verification, setVerification] = useState("");
   const uploadRef = createRef<HTMLInputElement>();
 
   function hasFinished() {
@@ -27,6 +31,12 @@ export default function Register() {
       placeholder: "请填写手机号",
       state: phone,
       setState: setPhone,
+    },
+    {
+      name: "验证码",
+      placeholder: "请输入验证码",
+      state: verification,
+      setState: setVerification,
     },
     {
       name: "密码",
@@ -49,6 +59,13 @@ export default function Register() {
       const bufferUrl = URL.createObjectURL(file);
       setAvatarDataUrl(bufferUrl);
     }
+  }
+  async function handleVerification() {
+    console.log("send verification code");
+    await verification_sms(phone);
+  }
+  async function handleRegister() {
+    await register(avatarDataUrl!, nickname, phone, pwd);
   }
 
   return (
@@ -84,18 +101,31 @@ export default function Register() {
                 value={v.state}
                 onChange={(e) => v.setState(e.target.value)}
               />
+              {v.name === "手机号" ? (
+                <button
+                  className={`${style.getVerify} wx_button`}
+                  onClick={handleVerification}
+                >
+                  获取验证码
+                </button>
+              ) : (
+                ""
+              )}
             </div>
           );
         })}
       </div>
-      <button
-        className={`wx_button ${style.nextStep} ${
-          hasFinished() ? "" : style.btnDisabled
-        }`}
-        disabled={hasFinished() ? false : true}
-      >
-        下一步
-      </button>
+      <Link to="/main/chats" className={style.linkWrapper}>
+        <button
+          className={`wx_button ${style.nextStep} ${
+            hasFinished() ? "" : style.btnDisabled
+          }`}
+          disabled={hasFinished() ? false : true}
+          onClick={handleRegister}
+        >
+          注 册
+        </button>
+      </Link>
     </div>
   );
 }

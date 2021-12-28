@@ -32,7 +32,8 @@
   align-items: center;
 }
 .moments img {
-  vertical-align: middle;
+  height: 28px;
+  margin: 0 12px;
 }
 .moments span {
   font-size: 18px;
