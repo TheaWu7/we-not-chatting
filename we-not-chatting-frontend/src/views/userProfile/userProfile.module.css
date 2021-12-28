@@ -1,0 +1,43 @@
+.topbarWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  height: 49px;
+  background: #fff;
+}
+.topbarWrapper img {
+  position: absolute;
+  left: 12px;
+  vertical-align: middle;
+}
+.infoWrapper {
+  display: flex;
+  margin: 20px;
+}
+.avatar {
+  flex: none;
+  width: 68px;
+  height: 68px;
+  margin: 0 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  text-align: left;
+  color: #888;
+  transform: translateY(-5px);
+}
+.infoContainer p {
+  margin-bottom: 3px;
+}
+.title {
+  margin-bottom: 6px;
+  color: #000;
+  font-weight: 500;
+  font-size: 22px;
+}

@@ -11,6 +11,7 @@ import NewFriends from "./views/newFriends/newFriends";
 import AddFriends from "./views/addFriends/addFriends";
 import Moments from "./views/moments/moments";
 import { ToastContainer } from "react-toastify";
+import UserProfile from "./views/userProfile/userProfile";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/newFriends" element={<NewFriends />} />
           <Route path="/addFriends" element={<AddFriends />} />
           <Route path="/moments" element={<Moments />} />
+          <Route path="/userProfile" element={<UserProfile />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer

@@ -1,9 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import style from "./newFriendsItem.module.css";
 
 export default function NewFriendsItem() {
   const accepted = true;
+  const navigate = useNavigate();
+
   return (
-    <div className={style.newFriendsItemWrapper}>
+    <div
+      className={style.newFriendsItemWrapper}
+      onClick={() => navigate("/userProfile")}
+    >
       <div className={style.avatar}>
         <img src="/assets/IMG_0063.JPG" alt="" width="37px" height="37px" />
       </div>
