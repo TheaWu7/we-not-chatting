@@ -6,10 +6,10 @@ export default function MomentsItem() {
   const hasImg = false;
   const [showActions, setShowActions] = useState(false);
   const [showLike, setShowLike] = useState(true);
-  const actionsList = [
-    { name: "赞", url: "/assets/like.svg" },
-    { name: "评论", url: "/assets/comment.svg" },
-  ];
+  // const actionsList = [
+  //   { name: "赞", url: "/assets/like.svg" },
+  //   { name: "评论", url: "/assets/comment.svg" },
+  // ];
 
   return (
     <div className={style.momentsItemWrapper}>
