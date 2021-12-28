@@ -1,0 +1,7 @@
+python_multipart==0.0.5
+fastapi==0.70.1
+PyMySql==1.0.2
+redis==4.1.0
+websockets==10.1
+peewee==3.14.8
+pydantic==1.8.2

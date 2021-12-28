@@ -10,3 +10,7 @@ class SendFriendRequestModel(BaseModel):
 class SetFriendRemarksModel(BaseModel):
     wx_id: str
     remarks: Optional[str] = None
+
+
+class DeleteFriendModel(BaseModel):
+    wx_id: str

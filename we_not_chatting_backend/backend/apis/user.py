@@ -45,7 +45,7 @@ def phone_login(data: PhoneLoginModel):
     res_data = phone_login_svc(data.phone, data.verification, data.pwd)
     if res_data is None:
         res = SimpleResponseModel(code=-1, msg="Login Failed")
-        return JSONResponse(res.dict())
+        return JSONResponse(res.dict(), status_code=status.HTTP_401_UNAUTHORIZED)
 
     user = User.get_or_none(phone=data.phone)
 
