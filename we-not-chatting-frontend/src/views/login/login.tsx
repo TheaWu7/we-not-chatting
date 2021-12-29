@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { login } from "../../requests/login";
 import { verification_sms } from "../../requests/verification";
 import style from "./login.module.css";
@@ -25,6 +26,7 @@ export default function Login() {
   async function handleVerification() {
     console.log("send verification code");
     await verification_sms(phone);
+    toast.success("验证码已发送");
   }
 
   const listRenderer = [() => loginList[0], () => (!usePwd ? loginList[1] : loginList[2])];

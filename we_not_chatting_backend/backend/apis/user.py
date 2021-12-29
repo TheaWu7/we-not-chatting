@@ -41,7 +41,7 @@ def register(data: RegisterModel):
 
 @app.post("/api/v1/user/login/phone")
 def phone_login(data: PhoneLoginModel):
-    if data.phone is None or data.verification is None:
+    if data.phone is None or (data.verification is None and data.pwd) is None:
         return JSONResponse(MISSING_ARGS_RESPONSE)
 
     res_data = phone_login_svc(data.phone, data.verification, data.pwd)
