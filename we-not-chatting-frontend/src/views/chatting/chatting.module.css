@@ -1,0 +1,64 @@
+.chattingWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.titleBar {
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eaeaea;
+  flex: none;
+}
+.backButton {
+  position: absolute;
+  left: 10px;
+  top: 15px;
+  height: 25px;
+  width: 25px;
+  outline: none;
+  background: transparent;
+  border: none;
+}
+.backButton img {
+  height: 20px;
+  width: 20px;
+}
+.chatTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+}
+.chatView {
+  background: #eaeaea;
+  overflow: hidden;
+  flex: auto;
+}
+.inputBar {
+  background: #f6f6f6;
+  height: 50px;
+  flex: none;
+  display: flex;
+  align-items: center;
+}
+.input {
+  flex: auto;
+  border: none;
+  border-radius: 3px;
+  max-height: 20px;
+  padding: 5px 8px;
+  margin-left: 8px;
+  outline: none;
+  background: white;
+  text-align: left;
+  overflow: scroll;
+}
+.inputBar button {
+  background: #0ab753;
+  color: white;
+  margin: 5px;
+  padding: 4px 12px;
+  border-radius: 5px;
+}

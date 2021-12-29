@@ -13,6 +13,7 @@ import Moments from "./views/moments/moments";
 import { ToastContainer } from "react-toastify";
 import UserProfile from "./views/userProfile/userProfile";
 import UserProfileViewContextProvider from "./contexts/userProfileViewContext";
+import ChattingView from "./views/chatting/chatting";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="discover" element={<Discover />} />
               <Route path="profile" element={<Profile />} />
             </Route>
+            <Route path="chatting" element={<ChattingView />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/newFriends" element={<NewFriends />} />

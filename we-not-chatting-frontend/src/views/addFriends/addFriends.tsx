@@ -7,7 +7,7 @@ import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
 
 export default function AddFriends() {
   const [searchInfo, setSearchInfo] = useState("");
-  const { setUserModel } = useContext(UserProfileViewContext)!;
+  const { setViewModel } = useContext(UserProfileViewContext)!;
 
   const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ export default function AddFriends() {
     if (userData === null) {
       toast.info("没有找到相关用户");
     } else {
-      setUserModel(userData);
+      setViewModel({ ...userData, mode: "stranger" });
       navigate("/userProfile");
     }
   }
