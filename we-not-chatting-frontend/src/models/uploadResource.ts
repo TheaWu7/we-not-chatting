@@ -4,5 +4,5 @@ export interface IUploadResourceDataModel {
   file_id: string;
 }
 
-export type UploadResourceResponseMode =
+export type UploadResourceResponseModel =
   IBaseResponseModel<IUploadResourceDataModel>;

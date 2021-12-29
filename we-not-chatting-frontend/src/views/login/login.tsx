@@ -11,7 +11,10 @@ export default function Login() {
     return phone && verification;
   }
   async function handleLogin() {
-    login(phone, verification);
+    const res = await login(phone, verification);
+    if (res !== null) {
+      localStorage["wnc_token"] = res.token;
+    }
   }
   async function handleVerification() {
     console.log("send verification code");
@@ -48,10 +51,7 @@ export default function Login() {
                 onChange={(e) => v.setState(e.target.value)}
               />
               {v.name === "手机号" ? (
-                <button
-                  className={`${style.getVerify} wx_button`}
-                  onClick={handleVerification}
-                >
+                <button className={`${style.getVerify} wx_button`} onClick={handleVerification}>
                   获取验证码
                 </button>
               ) : (
@@ -63,9 +63,7 @@ export default function Login() {
       </div>
       <Link to="/main/chats" className={style.linkWrapper}>
         <button
-          className={`${style.nextStep} wx_button ${
-            hasFinished() ? "" : style.btnDisabled
-          }`}
+          className={`${style.nextStep} wx_button ${hasFinished() ? "" : style.btnDisabled}`}
           onClick={handleLogin}
           disabled={hasFinished() ? false : true}
         >
