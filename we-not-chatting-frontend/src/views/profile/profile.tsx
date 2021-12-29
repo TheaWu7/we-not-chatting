@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { API_BASE_URL } from "../../constant";
 import { UserDataContext } from "../../contexts/userDataContext";
 import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
@@ -9,7 +9,7 @@ import style from "./profile.module.css";
 // const avatarUrl = "/assets/xixi.png";
 export default function Profile() {
   const [clickEdit, setClickEdit] = useState(false);
-  const { viewModel } = useContext(UserProfileViewContext)!;
+  const { viewModel, setViewModel } = useContext(UserProfileViewContext)!;
   const { userData, setUserData } = useContext(UserDataContext)!;
   const [newName, setNewName] = useState(userData?.nickname ?? "");
 
@@ -41,6 +41,18 @@ export default function Profile() {
     "/assets/IMG_8956.jpg",
   ];
 
+  useEffect(() => {
+    const mode = viewModel?.mode ?? "me";
+    if (mode !== "stranger") {
+      return;
+    }
+
+    const isFriend = userData?.contact.find((v) => v.wx_id === viewModel!.wx_id) !== undefined;
+    if (isFriend) {
+      setViewModel({ ...viewModel!, mode: "friend" });
+    }
+  }, []);
+
   const titleMap: { [k: string]: string } = {
     friend_request: "消息验证",
     friend: "Moments",
@@ -55,6 +67,53 @@ export default function Profile() {
       })}
     </div>
   );
+
+  const EditButton = () => {
+    let text;
+    if (clickEdit) {
+      text = "done";
+    } else {
+      if ((viewModel?.mode ?? "me") === "me") {
+        text = "edit";
+      } else {
+        text = "remark";
+      }
+    }
+
+    return (
+      <button className={style.editBtn} onClick={handleEditBtn}>
+        {text}
+      </button>
+    );
+  };
+
+  const VerifyFriend = () => (
+    <div className={style.verification}>
+      <p className={style.verificationContent}>
+        <span>{nickname}: </span>我是小号
+      </p>
+      <hr style={{ borderTop: "pink" }} />
+      <div className={`${style.veriBtn} wx_button`}>通过验证</div>
+    </div>
+  );
+
+  const AddFriendAction = () => (
+    <div className={style.verification}>
+      <div className={`${style.veriBtn} wx_button`}>添加好友</div>
+    </div>
+  );
+
+  function getActionComponent() {
+    const mode = viewModel?.mode ?? "me";
+    if (mode === "me" || mode === "friend") {
+      return <MomentPosts />;
+    } else if (mode === "friend_request") {
+      return <VerifyFriend />;
+    } else {
+      return <AddFriendAction />;
+    }
+  }
+
   async function handleEditBtn() {
     if (!clickEdit) {
       setClickEdit(!clickEdit);
@@ -85,24 +144,12 @@ export default function Profile() {
             <span>id: </span>
             <span>{wx_id}</span>
           </p>
-          <button className={style.editBtn} onClick={handleEditBtn}>
-            {clickEdit ? "done" : "edit"}
-          </button>
+          <EditButton />
         </div>
         {/*  */}
         <div className={style.momentsContainer}>
           <p className={style.momentsTitle}>{titleMap[viewModel?.mode ?? "me"]}</p>
-          {viewModel?.mode ?? "me" === "me" ? (
-            <MomentPosts />
-          ) : (
-            <div className={style.verification}>
-              <p className={style.verificationContent}>
-                <span>{nickname}: </span>我是小号
-              </p>
-              <hr style={{ borderTop: "pink" }} />
-              <div className={`${style.veriBtn} wx_button`}>通过验证</div>
-            </div>
-          )}
+          {getActionComponent()}
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ export default function ContactItem({ avatar, nickname, remarks, wx_id }: IConta
   const { setViewModel } = useContext(UserProfileViewContext)!;
 
   function handleJump() {
-    setViewModel({ avatar, nickname, remarks: remarks ?? null, wx_id });
+    setViewModel({ avatar, nickname, remarks: remarks ?? null, wx_id, mode: "friend" });
     navigate("/profile");
   }
 

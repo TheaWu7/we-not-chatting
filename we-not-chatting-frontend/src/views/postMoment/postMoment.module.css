@@ -1,0 +1,17 @@
+.postMomentWrapper {
+  position: relative;
+}
+.cancel {
+  position: absolute;
+}
+.post {
+  width: 50px;
+  height: 20px;
+  font-size: 17px;
+  color: #f9faf9;
+  background: #58be6b;
+}
+.btnDisabled {
+  color: #b7b7b7;
+  background-color: #efefef;
+}
