@@ -17,7 +17,7 @@ export default function AddFriends() {
       toast.info("没有找到相关用户");
     } else {
       setViewModel({ ...userData, mode: "stranger" });
-      navigate("/userProfile");
+      navigate("/profile");
     }
   }
 

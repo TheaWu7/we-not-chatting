@@ -34,6 +34,7 @@ function App() {
             <Route path="/addFriends" element={<AddFriends />} />
             <Route path="/moments" element={<Moments />} />
             <Route path="/userProfile" element={<UserProfile />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </BrowserRouter>
       </UserProfileViewContextProvider>

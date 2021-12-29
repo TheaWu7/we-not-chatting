@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
 import style from "./profile.module.css";
 
 const avatarUrl = "/assets/avatar.png";
 // const avatarUrl = "/assets/xixi.png";
 export default function Profile() {
-  const [isFriend, setIsFriend] = useState(false);
+  const [isFriend, setIsFriend] = useState(true);
+
+  const { viewModel } = useContext(UserProfileViewContext)!;
+
   const nickname = "Thea The Fish";
   const momentsImgList = [
     "/assets/avatar-chat.jpg",
@@ -30,6 +34,20 @@ export default function Profile() {
     "/assets/avatar-chat.jpg",
     "/assets/IMG_8956.jpg",
   ];
+  const titleMap: { [k: string]: string } = {
+    friend_request: "消息验证",
+    friend: "Moments",
+    me: "Moments",
+    stranger: "你们还不是好友",
+  };
+  const MomentPosts = () => (
+    <div className={style.momentsImg}>
+      {momentsImgList.map((v) => {
+        return <img src={v} alt="" width="60px" style={{ margin: "5px" }} />;
+      })}
+    </div>
+  );
+
   return (
     <div className={style.profileWrapper}>
       <div className={style.avatar}>
@@ -45,18 +63,16 @@ export default function Profile() {
           <button className={style.editBtn}>edit</button>
         </div>
         <div className={style.momentsContainer}>
-          <p className={style.momentsTitle}>{isFriend ? "Moments" : "消息验证"}</p>
+          <p className={style.momentsTitle}>{titleMap[viewModel?.mode ?? "me"]}</p>
           {isFriend ? (
-            <div className={style.momentsImg}>
-              {momentsImgList.map((v) => {
-                return <img src={v} alt="" width="60px" style={{ margin: "5px" }} />;
-              })}
-            </div>
+            <MomentPosts />
           ) : (
             <div className={style.verification}>
-              <p>
-                <span>{nickname}:</span>我是小号
+              <p className={style.verificationContent}>
+                <span>{nickname}: </span>我是小号
               </p>
+              <hr style={{ borderTop: "pink" }} />
+              <div className={`${style.veriBtn} wx_button`}>通过验证</div>
             </div>
           )}
         </div>

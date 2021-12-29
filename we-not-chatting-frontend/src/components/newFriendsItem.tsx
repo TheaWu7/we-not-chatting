@@ -6,10 +6,7 @@ export default function NewFriendsItem() {
   const navigate = useNavigate();
 
   return (
-    <div
-      className={style.newFriendsItemWrapper}
-      onClick={() => navigate("/userProfile")}
-    >
+    <div className={style.newFriendsItemWrapper} onClick={() => navigate("/profile")}>
       <div className={style.avatar}>
         <img src="/assets/IMG_0063.JPG" alt="" width="37px" height="37px" />
       </div>

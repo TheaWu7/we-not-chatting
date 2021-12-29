@@ -1,6 +1,8 @@
 .profileWrapper {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow: scroll;
 }
 .avatar {
   position: fixed;
@@ -9,7 +11,7 @@
   width: 100%;
   height: calc(100% - 100vw);
   background: #fff;
-  border-radius: 25px;
+  border-radius: 25px 25px 0 0;
   transform: translateY(calc(100vw - 25px));
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
 }
@@ -28,11 +30,30 @@
   background: #fff;
   text-decoration: underline;
 }
+.momentsContainer {
+  margin: 30px 25px 0 25px;
+}
 .momentsTitle {
   display: flex;
   padding-left: 8px;
-  margin: 30px 0 10px 25px;
+  margin-bottom: 15px;
   border-left: 3px solid silver;
   font-size: 22px;
   font-weight: 700;
+}
+.verificationContent {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f3f3f3;
+  border: 1px solid #efefef;
+  font-size: 16px;
+  border-radius: 5px;
+  text-align: left;
+}
+.veriBtn {
+  margin: 20px 0;
+  padding: 10px 0;
+  font-size: 19px;
+  color: #f9faf9;
+  background: #58be6b;
 }
