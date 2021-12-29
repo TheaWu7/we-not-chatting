@@ -31,7 +31,7 @@
 .momentsTitle {
   display: flex;
   padding-left: 8px;
-  margin: 30px 0 0 25px;
+  margin: 30px 0 10px 25px;
   border-left: 3px solid silver;
   font-size: 22px;
   font-weight: 700;
