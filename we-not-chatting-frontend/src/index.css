@@ -8,6 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   position: fixed;
   inset: 0;
+  overflow: hidden;
 }
 
 code {
