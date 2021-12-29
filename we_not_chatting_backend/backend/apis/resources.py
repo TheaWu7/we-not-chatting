@@ -1,26 +1,17 @@
 from typing import Optional
 
 import nanoid
-from fastapi import Header, File, UploadFile, status, Path
+from fastapi import File, UploadFile, status, Path
 from fastapi.responses import JSONResponse, FileResponse
 
 from backend.database import Files
 from backend.models import SimpleResponseModel
 from backend.models.resources_model import UploadResourceResponseModel, UploadResourceDataModel
 from backend.app import app
-from backend.services.authentication import auth_via_token
-from backend.apis.common_response import AUTHENTICATION_FAILED_RESPONSE
 
 
 @app.put("/api/v1/resources")
-async def upload_resources(file: UploadFile = File(...), Authentication: Optional[str] = Header(None)):
-    if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
-
-    user_id = auth_via_token(Authentication)
-    if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
-
+async def upload_resources(file: UploadFile = File(...)):
     id = nanoid.generate(size=32)
     storage_name = nanoid.generate()
 
@@ -37,14 +28,7 @@ async def upload_resources(file: UploadFile = File(...), Authentication: Optiona
 
 
 @app.get("/api/v1/resources/{id}")
-def get_resources(id: Optional[str] = Path(None), Authentication: Optional[str] = Header(None)):
-    if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
-
-    user_id = auth_via_token(Authentication)
-    if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
-    pass
+def get_resources(id: Optional[str] = Path(None)):
 
     file: Optional[Files] = Files.get_or_none(storage_name=id)
     if file is None:
