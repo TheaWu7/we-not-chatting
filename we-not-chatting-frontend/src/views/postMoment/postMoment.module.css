@@ -1,17 +1,57 @@
 .postMomentWrapper {
   position: relative;
 }
+.topbarWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px;
+  margin-left: 14px;
+}
 .cancel {
-  position: absolute;
+  font-size: 16px;
 }
 .post {
-  width: 50px;
-  height: 20px;
-  font-size: 17px;
+  padding: 5px 10px;
+  font-size: 16px;
   color: #f9faf9;
   background: #58be6b;
 }
 .btnDisabled {
   color: #b7b7b7;
   background-color: #efefef;
+}
+.postContent {
+  display: flex;
+  margin: 0 20px;
+}
+textarea {
+  flex: auto;
+  width: 0;
+  border: none;
+  outline: none;
+  font-size: 17px;
+}
+.picWrapper {
+  display: flex;
+  margin: 0 20px;
+  flex-wrap: wrap;
+}
+
+.previewImg {
+  margin: 0 8px 8px 0;
+  object-fit: cover;
+}
+.upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 115px;
+  height: 115px;
+  background: #f7f7f7;
+}
+.addIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

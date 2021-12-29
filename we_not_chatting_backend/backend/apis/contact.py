@@ -16,7 +16,7 @@ from backend.ws.connection_manager import ws_connection_manager
 
 
 @app.post("/api/v1/friends/request")
-def send_friend_request(data: SendFriendRequestModel, Authentication: Optional[str] = Header(None)):
+async def send_friend_request(data: SendFriendRequestModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
@@ -26,7 +26,7 @@ def send_friend_request(data: SendFriendRequestModel, Authentication: Optional[s
 
     user = User.get(id=user_id)
 
-    ws_connection_manager.send_friend_request(FriendRequestModel(from_id=user.wx_id, to_id=data.wx_id, msg=data.msg))
+    await ws_connection_manager.send_friend_request(FriendRequestModel(from_id=user.wx_id, to_id=data.wx_id, msg=data.msg))
 
     res = SimpleResponseModel(code=0)
     return JSONResponse(res.dict())

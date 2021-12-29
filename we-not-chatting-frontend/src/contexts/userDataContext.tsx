@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { IUserProfileModel } from "../models/userProfileModel";
 
 export interface IUserData {
@@ -12,24 +12,19 @@ export interface IUserData {
 
 interface IUserDataContextData {
   userData: IUserData | null | undefined;
-  setUserData: React.Dispatch<IUserData | null | undefined>;
+  setUserData: React.Dispatch<React.SetStateAction<IUserData | null | undefined>>;
 }
 
 export const UserDataContext = createContext<IUserDataContextData | undefined>(undefined);
 
 export default function UserDataContextProvider({ children }: any) {
-  const [userData, realSetUserData] = useState<IUserData | null | undefined>(
+  const [userData, setUserData] = useState<IUserData | null | undefined>(
     localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")!) : null
   );
 
-  function setUserData(data: IUserData | null | undefined) {
-    if (data) {
-      localStorage["user_data"] = JSON.stringify(data);
-    } else {
-      localStorage.removeItem("user_data");
-    }
-    realSetUserData(data);
-  }
+  useEffect(() => {
+    if (userData) localStorage["user_data"] = JSON.stringify(userData);
+  }, [userData]);
 
   return (
     <UserDataContext.Provider value={{ userData, setUserData }}>

@@ -58,20 +58,23 @@ class ConnectionManager:
         sent = False
         if to is not None:
             if to in self.connections:
-                await self.connections[to].send(data)
+                await self.connections[to].send_text(data.json())
             return True
 
         if data.to_id in self.connections:
-            await self.connections[data.to_id].send(data)
+            await self.connections[data.to_id].send_text(data.json())
             sent = True
 
         return sent
 
     async def send_and_save(self, data: Any):
-        sent = await self.send_if_connected(data.dict())
+        sent = await self.send_if_connected(data)
         from_user = User.get(wx_id=data.from_id)
         to_user = User.get(wx_id=data.to_id)
-        self.save_chat_history(from_user.id, to_user.id, data.msg.msg, data.msg.msg_type, sent)
+        if data.msg_type == "chat_message":
+            self.save_chat_history(from_user.id, to_user.id, data.msg.msg, data.msg.msg_type, sent)
+        else:
+            self.save_chat_history(from_user.id, to_user.id, data.msg, data.msg_type, sent)
 
     async def handleSendMessage(self, data: MessageSentModel):
         await self.send_and_save(data)

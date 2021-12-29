@@ -16,6 +16,8 @@ import UserProfileViewContextProvider from "./contexts/userProfileViewContext";
 import ChattingView from "./views/chatting/chatting";
 import UserDataContextProvider from "./contexts/userDataContext";
 import { Navigate } from "react-router-dom";
+import PostMoment from "./views/postMoment/postMoment";
+import WebSocketContextProvider from "./contexts/websocketContext";
 
 const EnsureAuth = () => (localStorage["wnc_token"] ? <Outlet /> : <Navigate to="/login" />);
 
@@ -24,26 +26,29 @@ function App() {
     <div className="App">
       <UserDataContextProvider>
         <UserProfileViewContextProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<EnsureAuth />}>
-                <Route path="/main" element={<MainViewsWrapper />}>
-                  <Route path="chats" element={<Chats />} />
-                  <Route path="contacts" element={<Contacts />} />
-                  <Route path="discover" element={<Discover />} />
-                  <Route path="profile" element={<Profile />} />
+          <WebSocketContextProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route element={<EnsureAuth />}>
+                  <Route path="/main" element={<MainViewsWrapper />}>
+                    <Route path="chats" element={<Chats />} />
+                    <Route path="contacts" element={<Contacts />} />
+                    <Route path="discover" element={<Discover />} />
+                    <Route path="profile" element={<Profile />} />
+                  </Route>
+                  <Route path="chatting" element={<ChattingView />} />
+                  <Route path="/newFriends" element={<NewFriends />} />
+                  <Route path="/addFriends" element={<AddFriends />} />
+                  <Route path="/moments" element={<Moments />} />
+                  <Route path="/userProfile" element={<UserProfile />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/postMoment" element={<PostMoment />} />
                 </Route>
-                <Route path="chatting" element={<ChattingView />} />
-                <Route path="/newFriends" element={<NewFriends />} />
-                <Route path="/addFriends" element={<AddFriends />} />
-                <Route path="/moments" element={<Moments />} />
-                <Route path="/userProfile" element={<UserProfile />} />
-                <Route path="/profile" element={<Profile />} />
-              </Route>
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-            </Routes>
-          </BrowserRouter>
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+              </Routes>
+            </BrowserRouter>
+          </WebSocketContextProvider>
         </UserProfileViewContextProvider>
       </UserDataContextProvider>
       <ToastContainer

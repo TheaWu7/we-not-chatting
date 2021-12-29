@@ -2,9 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserDataContext } from "../../contexts/userDataContext";
+import { WebSocketContext } from "../../contexts/websocketContext";
 import { getFriends } from "../../requests/friends";
 import { login } from "../../requests/login";
 import { verification_sms } from "../../requests/verification";
+import { WebSocketService } from "../../websocket_svc/websocket_service";
 import style from "./login.module.css";
 
 export default function Login() {
@@ -12,7 +14,8 @@ export default function Login() {
   const [verification, setVerification] = useState("");
   const [pwd, setPwd] = useState("");
   const [usePwd, setUsePwd] = useState(false);
-  const { setUserData } = useContext(UserDataContext)!;
+  const { userData, setUserData } = useContext(UserDataContext)!;
+  const { setWebsocketSvc } = useContext(WebSocketContext)!;
 
   const navigate = useNavigate();
 
@@ -31,7 +34,9 @@ export default function Login() {
           contact: contact.friends,
         });
       }
-      navigate("/main/chats");
+      globalThis.websocketSvc = new WebSocketService();
+      setWebsocketSvc(globalThis.websocketSvc);
+      navigate("/main/profile");
     }
   }
 
