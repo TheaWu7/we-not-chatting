@@ -1,11 +1,13 @@
 import style from "./addFriends.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { searchUser } from "../../requests/searchUser";
 import { toast } from "react-toastify";
+import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
 
 export default function AddFriends() {
   const [searchInfo, setSearchInfo] = useState("");
+  const { setUserModel } = useContext(UserProfileViewContext)!;
 
   const navigate = useNavigate();
 
@@ -13,6 +15,9 @@ export default function AddFriends() {
     const userData = await searchUser(searchInfo);
     if (userData === null) {
       toast.info("没有找到相关用户");
+    } else {
+      setUserModel(userData);
+      navigate("/userProfile");
     }
   }
 

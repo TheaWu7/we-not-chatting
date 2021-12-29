@@ -1,7 +1,6 @@
 import { IBaseResponseModel } from "./baseModel";
-import { IGetUserProfileResponseDataModel } from "./getUserProfile";
+import { IUserProfileModel } from "./userProfileModel";
 
-export interface ISearchUserDataModel
-  extends IGetUserProfileResponseDataModel {}
+export interface ISearchUserDataModel extends IUserProfileModel {}
 
 export type SearchUserResponseModel = IBaseResponseModel<ISearchUserDataModel>;

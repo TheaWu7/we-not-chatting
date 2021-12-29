@@ -1,14 +1,13 @@
 import { toast } from "react-toastify";
-import { GetUserProfileResponseModel, IGetUserProfileResponseDataModel } from "../models/getUserProfile";
+import { GetUserProfileResponseModel } from "../models/getUserProfile";
+import { IUserProfileModel } from "../models/userProfileModel";
 
-export async function getUserProfile(): Promise<IGetUserProfileResponseDataModel | null> {
+export async function getUserProfile(): Promise<IUserProfileModel | null> {
   try {
     const res = await globalThis.axios({
       url: "/user/:wx_id",
       method: "GET",
-      params: {
-
-      }
+      params: {},
     });
     const data: GetUserProfileResponseModel = res.data;
     if (data.code !== 0) {
@@ -18,7 +17,7 @@ export async function getUserProfile(): Promise<IGetUserProfileResponseDataModel
       return data.data!;
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     toast.error("error");
     return null;
   }

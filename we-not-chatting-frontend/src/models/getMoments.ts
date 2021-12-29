@@ -1,5 +1,4 @@
 import { IBaseResponseModel } from "./baseModel";
-import { IGetUserProfileResponseDataModel } from "./getUserProfile";
 
 export interface IMediaModel {
   type: number;
