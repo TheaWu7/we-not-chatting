@@ -8,8 +8,8 @@ export async function verification_sms(phone: string): Promise<IBaseResponseMode
       url: "/send_verification",
       method: "POST",
       data: {
-        phone
-      }
+        phone,
+      },
     });
 
     const data: VerificationResponseModel = res.data;
@@ -18,11 +18,10 @@ export async function verification_sms(phone: string): Promise<IBaseResponseMode
       toast.error(data.msg);
       return null;
     } else {
-      return data.data!
+      return data.data!;
     }
   } catch (error: any) {
-    console.log(error)
-    toast.error("asdfsdf");
+    console.log(error);
     return null;
   }
 }

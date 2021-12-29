@@ -12,7 +12,8 @@ export async function uploadResource(file: File): Promise<IUploadResourceDataMod
       data: req_data,
     });
     const data: UploadResourceResponseModel | undefined = res.data;
-    if (res.status === 201) {
+    console.log({ data });
+    if (data!.code === 0) {
       return {
         file_id: data!.data!.file_id,
       };

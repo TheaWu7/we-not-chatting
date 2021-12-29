@@ -9,9 +9,7 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [pwd, setPwd] = useState("");
   const [avatar, setAvatar] = useState<File | undefined>(undefined);
-  const [avatarDataUrl, setAvatarDataUrl] = useState<string | undefined>(
-    undefined
-  );
+  const [avatarDataUrl, setAvatarDataUrl] = useState<string | undefined>(undefined);
   const [verification, setVerification] = useState("");
   const uploadRef = createRef<HTMLInputElement>();
 
@@ -65,7 +63,7 @@ export default function Register() {
     await verification_sms(phone);
   }
   async function handleRegister() {
-    await register(avatarDataUrl!, nickname, phone, pwd);
+    await register({ avatar: avatar!, nickname, phone, pwd, verification });
   }
 
   return (
@@ -102,10 +100,7 @@ export default function Register() {
                 onChange={(e) => v.setState(e.target.value)}
               />
               {v.name === "手机号" ? (
-                <button
-                  className={`${style.getVerify} wx_button`}
-                  onClick={handleVerification}
-                >
+                <button className={`${style.getVerify} wx_button`} onClick={handleVerification}>
                   获取验证码
                 </button>
               ) : (
@@ -117,9 +112,7 @@ export default function Register() {
       </div>
       <Link to="/main/chats" className={style.linkWrapper}>
         <button
-          className={`wx_button ${style.nextStep} ${
-            hasFinished() ? "" : style.btnDisabled
-          }`}
+          className={`wx_button ${style.nextStep} ${hasFinished() ? "" : style.btnDisabled}`}
           disabled={hasFinished() ? false : true}
           onClick={handleRegister}
         >

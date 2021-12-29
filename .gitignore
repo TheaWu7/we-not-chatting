@@ -3,4 +3,5 @@ __pycache__/
 node_modules/
 .idea/
 .DS_Store
+resources/
 
