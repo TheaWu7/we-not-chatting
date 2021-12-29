@@ -13,11 +13,11 @@ from backend.database import User, ChatHistory, Contact
 @app.get("/api/v1/chat_history/unread")
 def get_unread_messages(Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     from_user_model = User.alias()
     to_user_model = User.alias()
@@ -49,11 +49,11 @@ def get_unread_messages(Authentication: Optional[str] = Header(None)):
 @app.get("/api/v1/chat_history/{friend_id}")
 def get_chat_history(friend_id: Optional[str], Authentication: Optional[str] = Header(None), offset: Optional[int] = Query(0)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user = User.get(id=user_id)
     friend: User = User.get_or_none(wx_id=friend_id)

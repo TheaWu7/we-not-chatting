@@ -16,7 +16,7 @@ class User(BaseModel):
     phone = CharField(max_length=11, null=True)
     email = CharField(max_length=50, null=True)
     password = CharField(null=True)
-    nickname = CharField(max_length=15)
+    nickname = CharField(max_length=35)
     avatar = TextField()
     moments_bg = TextField()
     wx_id = CharField(max_length=32)

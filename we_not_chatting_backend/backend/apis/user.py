@@ -27,16 +27,16 @@ def register(data: RegisterModel):
             return JSONResponse(res.dict())
         except VerificationFailedException:
             res = SimpleResponseModel(code=401, msg="Verification Failed")
-            return JSONResponse(res.dict(), status_code=status.HTTP_401_UNAUTHORIZED)
+            return JSONResponse(res.dict())
         except UserExistsWithSamePhone:
             res = SimpleResponseModel(code=409, msg="Phone Already Registered")
             return JSONResponse(res.dict())
         except Exception as e:
             res = SimpleResponseModel(code=-1, msg=str(e))
-            return JSONResponse(res.dict(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JSONResponse(res.dict())
 
     else:
-        return JSONResponse(MISSING_ARGS_RESPONSE, status_code=status.HTTP_400_BAD_REQUEST)
+        return JSONResponse(MISSING_ARGS_RESPONSE)
 
 
 @app.post("/api/v1/user/login/phone")
@@ -47,7 +47,7 @@ def phone_login(data: PhoneLoginModel):
     res_data = phone_login_svc(data.phone, data.verification, data.pwd)
     if res_data is None:
         res = SimpleResponseModel(code=-1, msg="Login Failed")
-        return JSONResponse(res.dict(), status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(res.dict())
 
     user = User.get_or_none(phone=data.phone)
 
@@ -61,11 +61,11 @@ def phone_login(data: PhoneLoginModel):
 @app.get("/api/v1/user/{wx_id}")
 def get_user(wx_id: str, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     data = get_user_svc(wx_id, user_id)
     if data is None:
@@ -90,11 +90,11 @@ def get_user_moments_bg(user_id: str):
 @app.post("/api/v1/user/moments_bg")
 def set_user_moments_bg(data: UserMomentsBgDataModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user = User.get(id=user_id)
     user.moments_bg = data.moments_bg
@@ -107,11 +107,11 @@ def set_user_moments_bg(data: UserMomentsBgDataModel, Authentication: Optional[s
 @app.patch("/api/v1/user/profile")
 def update_profile(data: UpdateUserProfileModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     try:
         update_user_profile(user_id, data.avatar, data.nickname)

@@ -17,11 +17,11 @@ from backend.database import Moments, User, Contact
 @app.post("/api/v1/moments")
 def post_moments(data: PostMomentsModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user = User.get(id=user_id)
 
@@ -41,11 +41,11 @@ def post_moments(data: PostMomentsModel, Authentication: Optional[str] = Header(
 @app.delete("/api/v1/moments")
 def delete_moments(data: DeleteMomentsModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     moment: Moments = Moments.get_or_none(id=data.moments_id)
     if moment is None:
@@ -62,11 +62,11 @@ def delete_moments(data: DeleteMomentsModel, Authentication: Optional[str] = Hea
 @app.get("/api/v1/moments")
 def get_latest_moments(offset: Optional[int] = Query(None), Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     try:
         friends_id = Contact.select(Contact.friend_id).where(Contact.owner==user_id)
@@ -102,16 +102,16 @@ def get_latest_moments(offset: Optional[int] = Query(None), Authentication: Opti
 
     except Exception as e:
         res = SimpleResponseModel(code=-1, msg=str(e))
-        return JSONResponse(res.dict(), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return JSONResponse(res.dict())
 
 
 @app.post("/api/v1/moments/like")
 def like_moments(data: LikeMomentModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     post: Moments = Moments.get_or_none(id=data.moments_id)
     if post is None:
@@ -133,11 +133,11 @@ def like_moments(data: LikeMomentModel, Authentication: Optional[str] = Header(N
 @app.post("/api/v1/moments/comment")
 def comment_post(data: CommentMomentModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     post: Moments = Moments.get_or_none(id=data.moment_id)
     if post is None:

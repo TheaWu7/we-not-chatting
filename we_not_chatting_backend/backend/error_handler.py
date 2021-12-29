@@ -7,4 +7,4 @@ from backend.apis.common_response import MISSING_ARGS_RESPONSE
 
 @app.exception_handler(RequestValidationError)
 def handle_validation_error(_, __):
-    return JSONResponse(MISSING_ARGS_RESPONSE, status_code=status.HTTP_400_BAD_REQUEST)
+    return JSONResponse(MISSING_ARGS_RESPONSE)

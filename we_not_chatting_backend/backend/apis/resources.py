@@ -24,7 +24,7 @@ async def upload_resources(file: UploadFile = File(...)):
     f_db.save()
 
     res = UploadResourceResponseModel(data=UploadResourceDataModel(file_id=storage_name))
-    return JSONResponse(res.dict(), status_code=status.HTTP_201_CREATED)
+    return JSONResponse(res.dict())
 
 
 @app.get("/api/v1/resources/{id}")
@@ -33,6 +33,6 @@ def get_resources(id: Optional[str] = Path(None)):
     file: Optional[Files] = Files.get_or_none(storage_name=id)
     if file is None:
         res = SimpleResponseModel(code=404, msg="File Not Found")
-        return JSONResponse(res, status_code=status.HTTP_404_NOT_FOUND)
+        return JSONResponse(res)
 
     return FileResponse(f"resources/{id}", media_type=file.type, filename=file.file_name)

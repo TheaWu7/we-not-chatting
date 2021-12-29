@@ -18,11 +18,11 @@ from backend.ws.connection_manager import ws_connection_manager
 @app.post("/api/v1/friends/request")
 def send_friend_request(data: SendFriendRequestModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user = User.get(id=user_id)
 
@@ -35,11 +35,11 @@ def send_friend_request(data: SendFriendRequestModel, Authentication: Optional[s
 @app.get("/api/v1/friends")
 def get_contact(Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     friends = Contact.select().where(Contact.owner==user_id).join(User, on=(Contact.friend == User.id))
 
@@ -59,11 +59,11 @@ def get_contact(Authentication: Optional[str] = Header(None)):
 @app.delete("/api/v1/friends")
 async def delete_contact(data: DeleteFriendModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user = User.get(id=user_id)
     query = Contact.delete().where((Contact.owner==user_id) & (Contact.friend==User.select(User.id).where(User.wx_id == data.wx_id)))
@@ -78,11 +78,11 @@ async def delete_contact(data: DeleteFriendModel, Authentication: Optional[str] 
 @app.post("/api/v1/friends/remarks")
 def set_friend_remarks(data: SetFriendRemarksModel, Authentication: Optional[str] = Header(None)):
     if Authentication is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     user_id = auth_via_token(Authentication)
     if user_id is None:
-        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE, status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     contact = Contact.select(Contact, User).join(User, on=(Contact.friend == User.id)).where(User.wx_id==data.wx_id).limit(1)
 
