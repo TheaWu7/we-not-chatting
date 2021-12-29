@@ -1,14 +1,22 @@
 import { toast } from "react-toastify";
 import { ILoginResponseDataModel, LoginResponseModel } from "../models/login";
 
-export async function login(phone: string, verification: string): Promise<ILoginResponseDataModel | null> {
+export async function login(phone: string, verification?: string, pwd?: string): Promise<ILoginResponseDataModel | null> {
+  if (verification === "") {
+    verification = undefined;
+  }
+  if (pwd === "") {
+    pwd = undefined;
+  }
+
   try {
     const res = await globalThis.axios({
       url: "/user/login/phone",
       method: "POST",
       data: {
         phone,
-        verification
+        verification,
+        pwd
       }
     });
 

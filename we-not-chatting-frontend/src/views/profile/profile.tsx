@@ -1,9 +1,11 @@
+import { useState } from "react";
 import style from "./profile.module.css";
 
 const avatarUrl = "/assets/avatar.png";
 // const avatarUrl = "/assets/xixi.png";
 export default function Profile() {
-  const isFriend = true;
+  const [isFriend, setIsFriend] = useState(false);
+  const nickname = "Thea The Fish";
   const momentsImgList = [
     "/assets/avatar-chat.jpg",
     "/assets/avatar-contacts.jpg",
@@ -35,7 +37,7 @@ export default function Profile() {
       </div>
       <div className={style.infoWrapper}>
         <div className={style.idContainer}>
-          <p className={style.nickname}>Thea The Fish</p>
+          <p className={style.nickname}>{nickname}</p>
           <p className={style.wncId}>
             <span>wnc_id: </span>
             <span>wenotchat-00411</span>
@@ -44,11 +46,19 @@ export default function Profile() {
         </div>
         <div className={style.momentsContainer}>
           <p className={style.momentsTitle}>{isFriend ? "Moments" : "消息验证"}</p>
-          <div className={style.momentsImg}>
-            {momentsImgList.map((v) => {
-              return <img src={v} alt="" width="60px" style={{ margin: "5px" }} />;
-            })}
-          </div>
+          {isFriend ? (
+            <div className={style.momentsImg}>
+              {momentsImgList.map((v) => {
+                return <img src={v} alt="" width="60px" style={{ margin: "5px" }} />;
+              })}
+            </div>
+          ) : (
+            <div className={style.verification}>
+              <p>
+                <span>{nickname}:</span>我是小号
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -110,7 +110,7 @@ export default function Register() {
           );
         })}
       </div>
-      <Link to="/main/chats" className={style.linkWrapper}>
+      <Link to="/login" className={style.linkWrapper}>
         <button
           className={`wx_button ${style.nextStep} ${hasFinished() ? "" : style.btnDisabled}`}
           disabled={hasFinished() ? false : true}

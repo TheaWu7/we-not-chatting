@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { login } from "../../requests/login";
 import { verification_sms } from "../../requests/verification";
 import style from "./login.module.css";
@@ -7,13 +7,19 @@ import style from "./login.module.css";
 export default function Login() {
   const [phone, setPhone] = useState("");
   const [verification, setVerification] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [usePwd, setUsePwd] = useState(false);
+
+  const navigate = useNavigate();
+
   function hasFinished() {
-    return phone && verification;
+    return phone && (verification || pwd);
   }
   async function handleLogin() {
-    const res = await login(phone, verification);
+    const res = await login(phone, verification, pwd);
     if (res !== null) {
       localStorage["wnc_token"] = res.token;
+      navigate("/main/chats");
     }
   }
   async function handleVerification() {
@@ -21,10 +27,21 @@ export default function Login() {
     await verification_sms(phone);
   }
 
+  const listRenderer = [() => loginList[0], () => (!usePwd ? loginList[1] : loginList[2])];
+
+  useEffect(() => {
+    if (usePwd) {
+      setVerification("");
+    } else {
+      setPhone("");
+    }
+  }, [usePwd]);
+
   const loginList = [
     {
       name: "手机号",
       placeholder: "请填写手机号",
+      validator: (e: string) => e.split("").every((e) => /\d/.test(e)) && setPhone(e),
       state: phone,
       setState: setPhone,
     },
@@ -34,23 +51,33 @@ export default function Login() {
       state: verification,
       setState: setVerification,
     },
+    {
+      name: "密 码",
+      placeholder: "请输入密码",
+      inputType: "password",
+      state: pwd,
+      setState: setPwd,
+    },
   ];
 
   return (
     <div className={style.loginWrapper}>
       <span className={style.title}>手机号登录</span>
       <div className={style.infoWrapper}>
-        {loginList.map((v) => {
+        {listRenderer.map((renderer) => {
+          const v = renderer();
           return (
             <div className={style.infoContent} key={v.name}>
               <span>{v.name}</span>
               <input
-                type="text"
+                type={v.inputType ?? "text"}
                 placeholder={v.placeholder}
                 value={v.state}
-                onChange={(e) => v.setState(e.target.value)}
+                onChange={(e) =>
+                  v.validator ? v.validator(e.target.value) : v.setState(e.target.value)
+                }
               />
-              {v.name === "手机号" ? (
+              {v.name === "手机号" && !usePwd ? (
                 <button className={`${style.getVerify} wx_button`} onClick={handleVerification}>
                   获取验证码
                 </button>
@@ -61,7 +88,10 @@ export default function Login() {
           );
         })}
       </div>
-      <Link to="/main/chats" className={style.linkWrapper}>
+      <span className={style.loginMethod} onClick={() => setUsePwd((v) => !v)}>
+        使用{usePwd ? "验证码" : "密码"}登陆
+      </span>
+      <div className={style.linkWrapper}>
         <button
           className={`${style.nextStep} wx_button ${hasFinished() ? "" : style.btnDisabled}`}
           onClick={handleLogin}
@@ -69,7 +99,7 @@ export default function Login() {
         >
           登 录
         </button>
-      </Link>
+      </div>
     </div>
   );
 }
