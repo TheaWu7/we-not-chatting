@@ -1,15 +1,21 @@
 import { useContext, useState } from "react";
+import { API_BASE_URL } from "../../constant";
+import { UserDataContext } from "../../contexts/userDataContext";
 import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
+import { updateUserProfile } from "../../requests/updateUserProfile";
 import style from "./profile.module.css";
 
-const avatarUrl = "/assets/avatar.png";
+// const avatarUrl = "/assets/avatar.png";
 // const avatarUrl = "/assets/xixi.png";
 export default function Profile() {
-  const [isFriend, setIsFriend] = useState(true);
-
+  const [clickEdit, setClickEdit] = useState(false);
   const { viewModel } = useContext(UserProfileViewContext)!;
+  const { userData, setUserData } = useContext(UserDataContext)!;
+  const [newName, setNewName] = useState(userData?.nickname ?? "");
 
-  const nickname = "Thea The Fish";
+  const nickname = viewModel?.nickname ?? userData?.nickname;
+  const wx_id = viewModel?.wx_id ?? userData?.wx_id;
+  const avatar = viewModel?.avatar ?? userData?.avatar;
   const momentsImgList = [
     "/assets/avatar-chat.jpg",
     "/assets/avatar-contacts.jpg",
@@ -34,12 +40,14 @@ export default function Profile() {
     "/assets/avatar-chat.jpg",
     "/assets/IMG_8956.jpg",
   ];
+
   const titleMap: { [k: string]: string } = {
     friend_request: "消息验证",
     friend: "Moments",
     me: "Moments",
     stranger: "你们还不是好友",
   };
+
   const MomentPosts = () => (
     <div className={style.momentsImg}>
       {momentsImgList.map((v) => {
@@ -47,24 +55,44 @@ export default function Profile() {
       })}
     </div>
   );
+  async function handleEditBtn() {
+    if (!clickEdit) {
+      setClickEdit(!clickEdit);
+    } else {
+      await updateUserProfile({ nickname: newName });
+      setUserData({ ...userData!, nickname: newName });
+      setClickEdit(!clickEdit);
+    }
+  }
 
   return (
     <div className={style.profileWrapper}>
       <div className={style.avatar}>
-        <img src={avatarUrl} width="100%" alt="avator" />
+        <img src={`${API_BASE_URL}/resources/${avatar}`} width="100%" alt="avatar" />
       </div>
       <div className={style.infoWrapper}>
         <div className={style.idContainer}>
-          <p className={style.nickname}>{nickname}</p>
+          {clickEdit ? (
+            <input
+              className={style.editInput}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+          ) : (
+            <p className={style.nickname}>{nickname}</p>
+          )}
           <p className={style.wncId}>
-            <span>wnc_id: </span>
-            <span>wenotchat-00411</span>
+            <span>id: </span>
+            <span>{wx_id}</span>
           </p>
-          <button className={style.editBtn}>edit</button>
+          <button className={style.editBtn} onClick={handleEditBtn}>
+            {clickEdit ? "done" : "edit"}
+          </button>
         </div>
+        {/*  */}
         <div className={style.momentsContainer}>
           <p className={style.momentsTitle}>{titleMap[viewModel?.mode ?? "me"]}</p>
-          {isFriend ? (
+          {viewModel?.mode ?? "me" === "me" ? (
             <MomentPosts />
           ) : (
             <div className={style.verification}>

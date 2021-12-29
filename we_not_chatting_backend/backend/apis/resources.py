@@ -33,6 +33,6 @@ def get_resources(id: Optional[str] = Path(None)):
     file: Optional[Files] = Files.get_or_none(storage_name=id)
     if file is None:
         res = SimpleResponseModel(code=404, msg="File Not Found")
-        return JSONResponse(res)
+        return JSONResponse(res.dict(), status_code=status.HTTP_404_NOT_FOUND)
 
     return FileResponse(f"resources/{id}", media_type=file.type, filename=file.file_name)

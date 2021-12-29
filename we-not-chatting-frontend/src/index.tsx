@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import axios from "axios";
 
 globalThis.axios = axios.create({
-  baseURL: "http://10.234.76.149:8000/api/v1",
+  baseURL: "http://192.168.0.185:8000/api/v1",
 });
 
 globalThis.axios.interceptors.request.use((req) => {

@@ -1,14 +1,31 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../constant";
+import { UserProfileViewContext } from "../contexts/userProfileViewContext";
 import style from "./contactItem.module.css";
 
-export default function ContactItem() {
+interface IContactItemProps {
+  avatar: string;
+  nickname: string;
+  remarks?: string | null;
+  wx_id: string;
+}
+
+export default function ContactItem({ avatar, nickname, remarks, wx_id }: IContactItemProps) {
   const navigate = useNavigate();
+  const { setViewModel } = useContext(UserProfileViewContext)!;
+
+  function handleJump() {
+    setViewModel({ avatar, nickname, remarks: remarks ?? null, wx_id });
+    navigate("/profile");
+  }
+
   return (
-    <div className={style.contactItemWrapper} onClick={() => navigate("/profile")}>
+    <div className={style.contactItemWrapper} onClick={handleJump}>
       <div className={style.avatar}>
-        <img src="/assets/avatar-chat.JPG" alt="" width="37px" height="37px" />
+        <img src={`${API_BASE_URL}/resources/${avatar}`} alt="" width="37px" height="37px" />
       </div>
-      <div className={style.nickname}>:p</div>
+      <div className={style.nickname}>{remarks ?? nickname}</div>
     </div>
   );
 }

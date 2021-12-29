@@ -22,19 +22,7 @@ export default function Chats() {
       </div>
       {showPopupBox ? <PopupBox /> : ""}
       <div className={style.chatItemWrapper}>
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
-        <ChattingItem />
+        <img src="/assets/we_not_chat_bg.png" alt="" width="50%" />
       </div>
     </div>
   );

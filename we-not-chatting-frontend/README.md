@@ -4,9 +4,14 @@
 - TypeScript
 - React
 - React Router
-- Antd
 - Axios
+
+## 环境准备
+
+- 安装 Node
 
 ## 项目启动
 
-### yarn / npm install 安装依赖
+### npm install 安装依赖
+
+### npm run start 启动项目

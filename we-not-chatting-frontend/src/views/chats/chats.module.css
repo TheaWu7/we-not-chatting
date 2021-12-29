@@ -11,7 +11,7 @@
   height: 49px;
   background: #ededed;
   flex: none;
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid #e2e2e2;
 }
 .topTitle {
   font-size: 18px;
@@ -28,4 +28,10 @@
 }
 .popup {
   background: #4c4c4c;
+}
+.chatItemWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #dbdbdb;
 }

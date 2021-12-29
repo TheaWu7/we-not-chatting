@@ -13,7 +13,7 @@ def create_phone_user(phone: str, verification: str, pwd: str, nickname: str, av
     if user is not None:
         raise UserExistsWithSamePhone()
 
-    wx_id = "wnc_id_" + nanoid.generate(size=20)
+    wx_id = "wnc_id_" + nanoid.generate(size=12)
     new_user = User.create(id=nanoid.generate(size=16), phone=phone, password=pwd, wx_id=wx_id, nickname=nickname, avatar=avatar)
     new_user.save()
     return True

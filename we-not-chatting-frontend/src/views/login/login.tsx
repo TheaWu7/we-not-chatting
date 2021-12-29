@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { UserDataContext } from "../../contexts/userDataContext";
+import { getFriends } from "../../requests/friends";
 import { login } from "../../requests/login";
 import { verification_sms } from "../../requests/verification";
 import style from "./login.module.css";
@@ -10,19 +12,29 @@ export default function Login() {
   const [verification, setVerification] = useState("");
   const [pwd, setPwd] = useState("");
   const [usePwd, setUsePwd] = useState(false);
+  const { setUserData } = useContext(UserDataContext)!;
 
   const navigate = useNavigate();
 
   function hasFinished() {
     return phone && (verification || pwd);
   }
+
   async function handleLogin() {
     const res = await login(phone, verification, pwd);
     if (res !== null) {
       localStorage["wnc_token"] = res.token;
+      const contact = await getFriends();
+      if (contact) {
+        setUserData({
+          ...res,
+          contact: contact.friends,
+        });
+      }
       navigate("/main/chats");
     }
   }
+
   async function handleVerification() {
     console.log("send verification code");
     await verification_sms(phone);
