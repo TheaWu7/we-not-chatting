@@ -42,7 +42,7 @@ def register(data: RegisterModel):
 @app.post("/api/v1/user/login/phone")
 def phone_login(data: PhoneLoginModel):
     if data.phone is None or data.verification is None:
-        return JSONResponse(MISSING_ARGS_RESPONSE, status_code=400)
+        return JSONResponse(MISSING_ARGS_RESPONSE)
 
     res_data = phone_login_svc(data.phone, data.verification, data.pwd)
     if res_data is None:
@@ -127,7 +127,7 @@ def update_profile(data: UpdateUserProfileModel, Authentication: Optional[str] =
 def search_user(info: str):
     user = User.select().where((User.phone == info) | (User.wx_id == info)).get_or_none()
     if user is None:
-        res = SimpleResponseModel(code=404, msg="User Not Found")
+        res = SimpleResponseModel(msg="User Not Found")
         return JSONResponse(res.dict())
 
     data = get_user_svc(user.wx_id)
