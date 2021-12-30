@@ -68,12 +68,17 @@ export default function MomentsItem({
   }
 
   // 判断id是否是自己
-  function handleFindData(name: string, wxid?: string) {
+  function handleFindData(name: string, wxid?: string): string {
     wxid ??= wx_id;
-    if (wxid == userData?.wx_id) {
+    if (wxid === userData?.wx_id) {
       return (userData as any)[name];
     } else {
-      return (userData?.contact.find((v) => v.wx_id === wxid)! as any)[name];
+      const data = userData?.contact.find((v) => v.wx_id === wxid)! as any;
+      if (data) {
+        return data[name];
+      } else {
+        return wxid!;
+      }
     }
   }
 
@@ -82,7 +87,7 @@ export default function MomentsItem({
       <img src="/assets/like-colored.svg" alt="" width="18px" style={{ margin: "0 4px" }} />
       {likes.map((m, i) => {
         return (
-          <span className={style.nickname} style={{ fontSize: "15px", marginBottom: "0" }}>
+          <span className={style.nickname} style={{ fontSize: "15px", marginBottom: "0" }} key={m}>
             {handleFindData("nickname", m)}
             {i < likes.length - 1 ? ", " : ""}
           </span>
@@ -96,9 +101,9 @@ export default function MomentsItem({
       className={comments.length || showComment ? style.comment : ""}
       style={comments.length && likes.length ? { borderTop: "1px solid #e7e7e7" } : {}}
     >
-      {comments.map((v) => {
+      {comments.map((v, i) => {
         return (
-          <p style={{ fontSize: "15px" }}>
+          <p style={{ fontSize: "15px" }} key={`${v.content}${i}`}>
             <span className={style.nickname} style={{ marginRight: "3px", fontSize: "15px" }}>
               {handleFindData("nickname", v.wx_id)}:
             </span>
@@ -147,6 +152,7 @@ export default function MomentsItem({
           {/* 图片 */}
           <div className={style.imgWrapper}>
             {media &&
+              media.content.length &&
               media.content.map((v) => {
                 return (
                   <img

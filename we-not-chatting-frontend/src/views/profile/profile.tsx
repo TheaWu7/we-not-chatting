@@ -3,13 +3,14 @@ import { API_BASE_URL } from "../../constant";
 import { UserDataContext } from "../../contexts/userDataContext";
 import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
 import { acceptFriendRequest } from "../../requests/acceptFriendRequest";
+import { getUserMoments } from "../../requests/getUserMoments";
 import { sendFriendRequest } from "../../requests/sendFriendRequest";
 import { setFriendRemark } from "../../requests/setFriendRemark";
 import { updateUserProfile } from "../../requests/updateUserProfile";
 import style from "./profile.module.css";
 
-// const avatarUrl = "/assets/avatar.png";
-// const avatarUrl = "/assets/xixi.png";
+let callCounter = 0;
+
 export default function Profile() {
   const [clickEdit, setClickEdit] = useState(false);
   const { viewModel, setViewModel } = useContext(UserProfileViewContext)!;
@@ -19,40 +20,14 @@ export default function Profile() {
       ? userData?.nickname ?? ""
       : viewModel?.remarks ?? viewModel!.nickname
   );
+  const [momentsImgList, setMomentsImgList] = useState<string[]>([]);
 
   const nickname = viewModel?.nickname ?? userData?.nickname;
   const wx_id = viewModel?.wx_id ?? userData?.wx_id;
   const avatar = viewModel?.avatar ?? userData?.avatar;
-  const momentsImgList = [
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-contacts.jpg",
-    "/assets/IMG_0063.jpg",
-    "/assets/IMG_8956.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-contacts.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/IMG_0063.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/IMG_8956.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-contacts.jpg",
-    "/assets/IMG_0063.jpg",
-    "/assets/IMG_8956.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-contacts.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/IMG_0063.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/IMG_8956.jpg",
-  ];
 
   useEffect(() => {
     const mode = viewModel?.mode ?? "me";
-    if (mode !== "stranger" && mode !== "friend") {
-      return;
-    }
 
     if (mode === "friend") {
       if (viewModel?.wx_id === userData?.wx_id) {
@@ -60,11 +35,36 @@ export default function Profile() {
       }
     }
 
-    const isFriend = userData?.contact.find((v) => v.wx_id === viewModel!.wx_id) !== undefined;
-    if (isFriend) {
-      setViewModel({ ...viewModel!, mode: "friend" });
+    let friend = mode === "friend";
+    if (mode === "stranger") {
+      const isFriend = userData?.contact.find((v) => v.wx_id === viewModel?.wx_id) !== undefined;
+      if (isFriend) {
+        setViewModel({ ...viewModel!, mode: "friend" });
+      }
+      friend = isFriend;
     }
-  }, []);
+
+    async function handleGetData(id: string, callCount: number) {
+      const res = await getUserMoments(id);
+      if (callCount < callCounter) return;
+      if (res) {
+        setMomentsImgList(
+          res.posts
+            .filter((v) => v.media && v.media.content.length > 0)
+            .map((v) => v.media!.content)
+            .flat()
+        );
+      }
+    }
+
+    if (mode === "friend" || friend) {
+      callCounter++;
+      handleGetData(viewModel!.wx_id, callCounter);
+    } else if (mode === "me") {
+      callCounter++;
+      handleGetData(userData!.wx_id, callCounter);
+    }
+  }, [viewModel]);
 
   async function handleAcceptRequest() {
     await acceptFriendRequest(viewModel!.friend_request_id!);
@@ -84,7 +84,16 @@ export default function Profile() {
   const MomentPosts = () => (
     <div className={style.momentsImg}>
       {momentsImgList.map((v) => {
-        return <img src={v} alt="" width="60px" height="60px" style={{ margin: "5px" }} />;
+        return (
+          <img
+            src={`${API_BASE_URL}/resources/${v}`}
+            alt=""
+            width="60px"
+            height="60px"
+            style={{ margin: "5px" }}
+            key={v}
+          />
+        );
       })}
     </div>
   );

@@ -24,7 +24,7 @@ export default function Contacts() {
         </Link>
         <p className={style.seperator}>Friends</p>
         {userData!.contact.map((v) => (
-          <ContactItem {...v} />
+          <ContactItem {...v} key={v.avatar} />
         ))}
       </div>
     </div>

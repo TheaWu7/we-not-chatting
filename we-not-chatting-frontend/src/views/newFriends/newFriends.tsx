@@ -28,7 +28,7 @@ export default function NewFriends() {
       </div>
       <div className={style.newFriendsItemWrapper}>
         {friend_requests.map((v) => (
-          <NewFriendsItem {...v} />
+          <NewFriendsItem {...v} key={v.request_id} />
         ))}
       </div>
     </div>

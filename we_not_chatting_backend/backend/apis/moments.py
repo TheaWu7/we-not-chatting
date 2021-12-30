@@ -215,17 +215,13 @@ def get_user_moments(user_wxid: str = Path(None), Authentication: Optional[str] 
         res = SimpleResponseModel(code=404, msg="User Not Found")
         return JSONResponse(res.dict())
 
-    c = Contact\
-        .select()\
-        .where((Contact.owner == user_id) & (Contact.friend == user.id))\
-        .orwhere((Contact.friend == user_id) & (Contact.owner == user.id))\
-        .get_or_none()
+    friend_list = get_friend_list(user_id)
 
-    if (c is None):
+    if (user.wx_id not in friend_list):
         res = SimpleResponseModel(code=403, msg="对方不是你的好友")
         return JSONResponse(res.dict())
 
-    moments = Moments.select().where(Moments.poster == user.id).limit(20).offset(offset)
+    moments = Moments.select().where(Moments.poster == user.id).order_by(Moments.time.desc()).limit(20).offset(offset)
     friends = get_friend_list(user_id)
     res = generateMomentsResponse(moments, friends)
     return JSONResponse(res.dict())

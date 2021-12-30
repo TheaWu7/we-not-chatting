@@ -63,7 +63,8 @@ def get_friend_request_history(Authentication: Optional[str] = Header(None)):
         .where(FriendRequests.to_user==user_id)\
         .join(from_u, on=(from_u.id == FriendRequests.from_user))\
         .switch(FriendRequests)\
-        .join(to_u, on=(to_u.id == FriendRequests.to_user))
+        .join(to_u, on=(to_u.id == FriendRequests.to_user))\
+        .order_by(FriendRequests.time.desc())
 
     data = []
 

@@ -51,6 +51,10 @@
   font-size: 22px;
   font-weight: 700;
 }
+.momentsImg {
+  display: flex;
+  flex-wrap: wrap;
+}
 .momentsImg img {
   object-fit: cover;
 }

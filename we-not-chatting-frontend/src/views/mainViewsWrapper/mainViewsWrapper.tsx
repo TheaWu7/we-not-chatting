@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import TabBar from "../../components/tabBar";
 import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
@@ -7,9 +7,11 @@ export default function MainViewsWrapper() {
   const location = useLocation();
   const { setViewModel } = useContext(UserProfileViewContext)!;
 
-  if (location.pathname === "/main/profile") {
-    setViewModel(null);
-  }
+  useEffect(() => {
+    if (location.pathname === "/main/profile") {
+      setViewModel(null);
+    }
+  }, [setViewModel, location]);
 
   return (
     <div>
