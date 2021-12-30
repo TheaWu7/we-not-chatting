@@ -2,7 +2,7 @@ from peewee import Model, MySQLDatabase, CharField, TextField, ForeignKeyField, 
 
 
 db = MySQLDatabase("WeNotChatting")
-db.init("WeNotChatting", host="127.0.0.1", user="we_not_chatting", password="WeNotChatting")
+db.init("WeNotChatting", host="127.0.0.1", user="we_not_chatting", password="WeNotChatting", charset="utf8mb4")
 db.connect()
 
 
@@ -46,6 +46,16 @@ class ChatHistory(BaseModel):
     time = IntegerField()
     content = TextField()
     content_type = SmallIntegerField()
+    sent = BooleanField(default=True)
+
+
+class FriendRequests(BaseModel):
+    id = CharField(max_length=21, primary_key=True)
+    from_user = ForeignKeyField(User, related_name="from_user")
+    to_user = ForeignKeyField(User, related_name="to_user")
+    time = IntegerField()
+    content = TextField()
+    accepted = BooleanField(default=False)
     sent = BooleanField(default=True)
 
 

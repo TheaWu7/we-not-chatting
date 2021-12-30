@@ -14,3 +14,7 @@ class SetFriendRemarksModel(BaseModel):
 
 class DeleteFriendModel(BaseModel):
     wx_id: str
+
+
+class AcceptFriendModel(BaseModel):
+    request_id: str

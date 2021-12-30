@@ -6,7 +6,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 from pydantic import ValidationError
 
 from backend.models.real_time_event_model import *
-from backend.database import ChatHistory, User
+from backend.database import ChatHistory, User, FriendRequests
 
 
 class ConnectionManager:
@@ -45,12 +45,15 @@ class ConnectionManager:
             })
 
     def save_chat_history(self, from_: str, to: str, content: str, content_type: int, sent: bool):
+        content_type_map = {
+                "delete_friend": 10003,
+        }
         chat_history = ChatHistory.create(id=nanoid.generate(size=32),
                                           from_user_id=from_,
                                           to_user_id=to,
                                           time=time.time(),
                                           content=content,
-                                          content_type=content_type,
+                                          content_type=content_type_map[content_type],
                                           sent=sent)
         chat_history.save()
 
@@ -67,7 +70,7 @@ class ConnectionManager:
 
         return sent
 
-    async def send_and_save(self, data: Any):
+    async def send_and_save(self, data: Any) -> bool:
         sent = await self.send_if_connected(data)
         from_user = User.get(wx_id=data.from_id)
         to_user = User.get(wx_id=data.to_id)
@@ -75,11 +78,15 @@ class ConnectionManager:
             self.save_chat_history(from_user.id, to_user.id, data.msg.msg, data.msg.msg_type, sent)
         else:
             self.save_chat_history(from_user.id, to_user.id, data.msg, data.msg_type, sent)
+        return sent
 
     async def handleSendMessage(self, data: MessageSentModel):
         await self.send_and_save(data)
 
-    async def send_friend_request(self, data: FriendRequestModel):
+    async def send_friend_request(self, data: FriendRequestModel) -> bool:
+        return await self.send_if_connected(data)
+
+    async def accept_friend_request(self, data: FriendRequestAcceptedModel):
         await self.send_and_save(data)
 
     async def delete_friend(self, data: DeleteFriendModel):

@@ -8,6 +8,7 @@ from backend.models.moments_model import MomentsPostModel
 class SimpleResponseModel(BaseModel):
     code: int = 0
     msg: Optional[str] = None
+    data: Optional[BaseModel] = None
 
 class LoginDataModel(BaseModel):
     user_id: str
@@ -63,3 +64,18 @@ class GetUserMomentsBgResponseModel(BaseModel):
     code: int=0
     msg: Optional[str] = None
     data: UserMomentsBgDataModel
+
+
+class GetFriendRequestHistoryItemModel(BaseModel):
+    request_id: str
+    from_user: str
+    to_user: str
+    time: int
+    msg: str
+    accepted: bool
+
+
+class GetFriendRequestHistoryResponseModel(BaseModel):
+    code: int=0
+    msg: Optional[str] = None
+    data: List[GetFriendRequestHistoryItemModel]

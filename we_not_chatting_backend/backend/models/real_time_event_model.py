@@ -8,9 +8,18 @@ class RealTimeEventBaseModel(BaseModel):
 
 class FriendRequestModel(RealTimeEventBaseModel):
     msg_type = "friend_request"
+    request_id: str
     from_id: str
     to_id: str
+    time: int
     msg: str
+
+
+class FriendRequestAcceptedModel(RealTimeEventBaseModel):
+    msg_type = "friend_request_accepted"
+    from_id: str
+    to_id: str
+    request_id: str
 
 
 class MessageDataModel(BaseModel):

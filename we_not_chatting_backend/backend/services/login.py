@@ -7,7 +7,7 @@ import nanoid
 
 
 def phone_login(phone: str, verification: Optional[str], pwd: Optional[str]) -> Optional[Tuple[str, str]]:
-    user = User.get(phone=phone)
+    user = User.get_or_none(phone=phone)
     if user is None:
         return None
 

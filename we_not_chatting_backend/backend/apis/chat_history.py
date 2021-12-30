@@ -1,13 +1,14 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import Header, status, Query
 from fastapi.responses import JSONResponse
 from backend.app import app
 from backend.models import SimpleResponseModel
 from backend.models.chat_history_model import ChatHistoryResponseDataModel, ChatHistoryResponseModel
+from backend.models.response_model import GetFriendRequestHistoryResponseModel, GetFriendRequestHistoryItemModel
 from backend.services.authentication import auth_via_token
 from backend.apis.common_response import AUTHENTICATION_FAILED_RESPONSE
-from backend.database import User, ChatHistory, Contact
+from backend.database import User, ChatHistory, FriendRequests
 
 
 @app.get("/api/v1/chat_history/unread")
@@ -43,6 +44,39 @@ def get_unread_messages(Authentication: Optional[str] = Header(None)):
         h.save()
 
     res = ChatHistoryResponseModel(data=data)
+    return JSONResponse(res.dict())
+
+
+@app.get("/api/v1/chat_history/friend_request")
+def get_friend_request_history(Authentication: Optional[str] = Header(None)):
+    if Authentication is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
+
+    user_id = auth_via_token(Authentication)
+    if user_id is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
+
+    from_u = User.alias()
+    to_u = User.alias()
+    f_req: List[FriendRequests] = FriendRequests\
+        .select()\
+        .where(FriendRequests.to_user==user_id)\
+        .join(from_u, on=(from_u.id == FriendRequests.from_user))\
+        .switch(FriendRequests)\
+        .join(to_u, on=(to_u.id == FriendRequests.to_user))
+
+    data = []
+
+    for req in f_req:
+        d = GetFriendRequestHistoryItemModel(request_id=req.id,
+                                             from_user=req.from_user.wx_id,
+                                             to_user=req.to_user.wx_id,
+                                             time=req.time,
+                                             msg=req.content,
+                                             accepted=req.accepted)
+        data.append(d)
+
+    res = GetFriendRequestHistoryResponseModel(data=data)
     return JSONResponse(res.dict())
 
 

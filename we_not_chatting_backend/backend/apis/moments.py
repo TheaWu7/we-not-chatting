@@ -2,10 +2,10 @@ import json
 import time
 
 import nanoid
-from fastapi import Header, Query
+from fastapi import Header, Query, Path
 from fastapi.responses import JSONResponse
 from fastapi import status
-from typing import Optional, List
+from typing import Optional, List, Set
 from backend.models import PostMomentsModel, SimpleResponseModel, DeleteMomentsModel, GetLatestMomentsResponseModel, GetLatestMomentsDataModel
 from backend.models.moments_model import MomentsPostModel, MomentsMediaModel, MomentsCommentModel, LikeMomentModel, CommentMomentModel
 from backend.app import app
@@ -52,7 +52,7 @@ def delete_moments(data: DeleteMomentsModel, Authentication: Optional[str] = Hea
         res = SimpleResponseModel(code=404, msg="Moment post not found")
         return JSONResponse(res.dict())
 
-    if moment.poster == user_id:
+    if moment.poster.id == user_id:
         moment.delete_instance()
 
     res = SimpleResponseModel(code=0, msg=None)
@@ -120,10 +120,10 @@ def like_moments(data: LikeMomentModel, Authentication: Optional[str] = Header(N
 
     user = User.get(id=user_id)
 
-    likes: List[str] = json.loads(post.likes if post.likes is not None and post.likes != "" else "[]")
+    likes: Set[str] = set(json.loads(post.likes if post.likes is not None and post.likes != "" else "[]"))
     if user_id not in likes:
-        likes.append(user.wx_id)
-    post.likes = json.dumps(likes)
+        likes.add(user.wx_id)
+    post.likes = json.dumps(list(likes))
     post.save()
 
     res = SimpleResponseModel(code=0)
@@ -156,4 +156,55 @@ def comment_post(data: CommentMomentModel, Authentication: Optional[str] = Heade
     post.save()
 
     res = SimpleResponseModel(code=0)
+    return JSONResponse(res.dict())
+
+
+@app.get("/api/v1/moments/{user_wxid}")
+def get_user_moments(user_wxid: str = Path(None), Authentication: Optional[str] = Header(None), offset: Optional[int] = Query(0)):
+    if Authentication is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
+
+    user_id = auth_via_token(Authentication)
+    if user_id is None:
+        return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
+
+    user = User.get_or_none(wx_id=user_wxid)
+    if user is None:
+        res = SimpleResponseModel(code=404, msg="User Not Found")
+        return JSONResponse(res.dict())
+
+    c = Contact\
+        .select()\
+        .where((Contact.owner == user_id) & (Contact.friend == user.id))\
+        .orwhere((Contact.friend == user_id) & (Contact.owner == user.id))\
+        .get_or_none()
+
+    if (c is None):
+        res = SimpleResponseModel(code=403, msg="对方不是你的好友")
+        return JSONResponse(res.dict())
+
+    moments = Moments.select().where(Moments.poster == user.id).limit(20).offset(offset)
+    data = GetLatestMomentsDataModel()
+    data.posts = []
+    res = GetLatestMomentsResponseModel(code=0, data=data)
+
+    for post in moments:
+        comments = json.loads(post.comments if post.comments is not None and post.likes != "" else "[]")
+        p = MomentsPostModel(moments_id=post.id,
+                             wx_id=post.poster.wx_id,
+                             likes=json.loads(post.likes if post.likes is not None and post.likes != "" else "[]"),
+                             content=post.content,
+                             time=post.time
+                             )
+        p.comments = []
+        for comment in comments:
+            c: MomentsCommentModel = MomentsCommentModel.parse_obj(comment)
+            p.comments.append(c)
+
+        if post.media is not None:
+            media = json.loads(post.media)
+            p.media = MomentsMediaModel.parse_obj(media)
+
+        data.posts.append(p)
+
     return JSONResponse(res.dict())
