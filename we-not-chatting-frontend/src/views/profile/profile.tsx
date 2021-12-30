@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { API_BASE_URL } from "../../constant";
 import { UserDataContext } from "../../contexts/userDataContext";
 import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
+import { acceptFriendRequest } from "../../requests/acceptFriendRequest";
+import { sendFriendRequest } from "../../requests/sendFriendRequest";
+import { setFriendRemark } from "../../requests/setFriendRemark";
 import { updateUserProfile } from "../../requests/updateUserProfile";
 import style from "./profile.module.css";
 
@@ -11,7 +14,11 @@ export default function Profile() {
   const [clickEdit, setClickEdit] = useState(false);
   const { viewModel, setViewModel } = useContext(UserProfileViewContext)!;
   const { userData, setUserData } = useContext(UserDataContext)!;
-  const [newName, setNewName] = useState(userData?.nickname ?? "");
+  const [newName, setNewName] = useState(
+    (viewModel?.mode ?? "me") == "me"
+      ? userData?.nickname ?? ""
+      : viewModel?.remarks ?? viewModel!.nickname
+  );
 
   const nickname = viewModel?.nickname ?? userData?.nickname;
   const wx_id = viewModel?.wx_id ?? userData?.wx_id;
@@ -43,8 +50,14 @@ export default function Profile() {
 
   useEffect(() => {
     const mode = viewModel?.mode ?? "me";
-    if (mode !== "stranger") {
+    if (mode !== "stranger" && mode !== "friend") {
       return;
+    }
+
+    if (mode === "friend") {
+      if (viewModel?.wx_id === userData?.wx_id) {
+        setViewModel({ ...viewModel!, mode: "me" });
+      }
     }
 
     const isFriend = userData?.contact.find((v) => v.wx_id === viewModel!.wx_id) !== undefined;
@@ -53,17 +66,25 @@ export default function Profile() {
     }
   }, []);
 
+  async function handleAcceptRequest() {
+    await acceptFriendRequest(viewModel!.friend_request_id!);
+  }
+
+  async function handleSendFriendRequest() {
+    await sendFriendRequest(viewModel!.wx_id, "加我为好友吧！");
+  }
+
   const titleMap: { [k: string]: string } = {
     friend_request: "消息验证",
-    friend: "Moments",
-    me: "Moments",
+    friend: "TA 的时刻",
+    me: "我的时刻",
     stranger: "你们还不是好友",
   };
 
   const MomentPosts = () => (
     <div className={style.momentsImg}>
       {momentsImgList.map((v) => {
-        return <img src={v} alt="" width="60px" style={{ margin: "5px" }} />;
+        return <img src={v} alt="" width="60px" height="60px" style={{ margin: "5px" }} />;
       })}
     </div>
   );
@@ -90,16 +111,21 @@ export default function Profile() {
   const VerifyFriend = () => (
     <div className={style.verification}>
       <p className={style.verificationContent}>
-        <span>{nickname}: </span>我是小号
+        <span>{nickname}: </span>
+        {viewModel?.verification_msg}
       </p>
       <hr style={{ borderTop: "pink" }} />
-      <div className={`${style.veriBtn} wx_button`}>通过验证</div>
+      <div onClick={handleAcceptRequest} className={`${style.veriBtn} wx_button`}>
+        通过验证
+      </div>
     </div>
   );
 
   const AddFriendAction = () => (
     <div className={style.verification}>
-      <div className={`${style.veriBtn} wx_button`}>添加好友</div>
+      <div onClick={handleSendFriendRequest} className={`${style.veriBtn} wx_button`}>
+        添加好友
+      </div>
     </div>
   );
 
@@ -118,8 +144,12 @@ export default function Profile() {
     if (!clickEdit) {
       setClickEdit(!clickEdit);
     } else {
-      await updateUserProfile({ nickname: newName });
-      setUserData({ ...userData!, nickname: newName });
+      if ((viewModel?.mode ?? "me") === "me") {
+        await updateUserProfile({ nickname: newName });
+        setUserData({ ...userData!, nickname: newName });
+      } else {
+        await setFriendRemark(viewModel!.wx_id, newName);
+      }
       setClickEdit(!clickEdit);
     }
   }
@@ -146,7 +176,6 @@ export default function Profile() {
           </p>
           <EditButton />
         </div>
-        {/*  */}
         <div className={style.momentsContainer}>
           <p className={style.momentsTitle}>{titleMap[viewModel?.mode ?? "me"]}</p>
           {getActionComponent()}

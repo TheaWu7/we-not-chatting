@@ -1,7 +1,6 @@
 import React, { createRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { postMoment } from "../../requests/postMoment";
-import { uploadResource } from "../../requests/uploadResource";
 import style from "./postMoment.module.css";
 
 export default function PostMoment() {
@@ -30,6 +29,7 @@ export default function PostMoment() {
       media_type: 0,
       media_content: sendPic,
     });
+    navigate("/moments", { replace: true });
   }
   return (
     <div className={style.postMomentWrapper}>
@@ -61,10 +61,17 @@ export default function PostMoment() {
       <div className={style.picWrapper}>
         {sendPic.map((v) => {
           const url = URL.createObjectURL(v);
-          return <img src={url} className={style.previewImg} alt="" width="115px" height="115px" />;
+          return (
+            <img
+              src={url}
+              className={style.previewImg}
+              alt=""
+              style={{ width: "115px", height: "115px" }}
+            />
+          );
         })}
         {sendPic.length > 9 ? null : (
-          <div className={style.upload}>
+          <div className={style.upload} onClick={handleUpload}>
             <input
               type="file"
               style={{ display: "none" }}
@@ -72,7 +79,7 @@ export default function PostMoment() {
               onChange={handleFileChange}
               multiple
             />
-            <img src="/assets/add_pic.svg" alt="" width="50px" onClick={handleUpload} />
+            <img src="/assets/add_pic.svg" alt="" width="50px" />
           </div>
         )}
       </div>

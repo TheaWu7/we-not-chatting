@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { UserDataContext } from "../../contexts/userDataContext";
 import { WebSocketContext } from "../../contexts/websocketContext";
 import { getFriends } from "../../requests/friends";
+import { getFriendRequestHistory } from "../../requests/getFriendRequestHistory";
 import { login } from "../../requests/login";
 import { verification_sms } from "../../requests/verification";
 import { WebSocketService } from "../../websocket_svc/websocket_service";
@@ -28,10 +29,12 @@ export default function Login() {
     if (res !== null) {
       localStorage["wnc_token"] = res.token;
       const contact = await getFriends();
+      const friend_requests = (await getFriendRequestHistory()) ?? [];
       if (contact) {
         setUserData({
           ...res,
           contact: contact.friends,
+          friend_requests,
         });
       }
       globalThis.websocketSvc = new WebSocketService();

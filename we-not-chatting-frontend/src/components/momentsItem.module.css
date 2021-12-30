@@ -26,6 +26,18 @@
 .content p {
   font-size: 16px;
 }
+.imgWrapper {
+  margin-top: 8px;
+}
+.preview {
+  width: 85px;
+  height: 85px;
+  margin: 0 6px 3px 0;
+  object-fit: cover;
+}
+.preview1 {
+  height: 120px;
+}
 .info {
   display: flex;
   justify-content: space-between;
@@ -35,6 +47,11 @@
   color: #c1c1c1;
   font-size: 14px;
 }
+.delete {
+  margin-left: 8px;
+  color: #6a7797;
+  font-size: 14px;
+}
 .dots {
   display: flex;
   justify-content: center;
@@ -42,8 +59,6 @@
   width: 26px;
   height: 18px;
   color: #6a7797;
-  font-size: 15px;
-  font-weight: 700;
   border-radius: 5px;
 }
 .actionsWrapper {
@@ -55,11 +70,39 @@
   top: -50%;
   transform: translateY(2px);
 }
+.interact {
+  margin-top: 8px;
+  background: #efefef;
+  border-radius: 5px;
+}
 .likes {
   display: flex;
   align-items: center;
-  margin-top: 8px;
   padding: 5px;
-  background: #efefef;
-  border-radius: 5px;
+}
+.comment {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px;
+}
+.sendComment {
+  display: flex;
+}
+.sendComment button {
+  font-size: 15px;
+  color: #f9faf9;
+  background: #58be6b;
+}
+.sendComment button:active {
+  background-color: #51aa61;
+}
+.btnDisabled {
+  color: #b7b7b7;
+  background-color: #efefef;
+}
+.commentInput {
+  flex: auto;
+  font-size: 15px;
+  border: none;
+  outline: none;
 }

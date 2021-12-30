@@ -2,11 +2,14 @@ import { toast } from "react-toastify";
 import { IBaseResponseModel } from "../models/baseModel";
 import { likeMomentsResponseModel } from "../models/likeMoments";
 
-export async function likeMoments(): Promise<IBaseResponseModel<null> | null> {
+export async function likeMoments(moments_id: string): Promise<IBaseResponseModel<null> | null> {
   try {
     const res = await globalThis.axios({
       url: "/moments/like",
-      method: "POST"
+      method: "POST",
+      data: {
+        moments_id,
+      },
     });
     const data: likeMomentsResponseModel = res.data;
     if (data.code !== 0) {
@@ -16,7 +19,7 @@ export async function likeMoments(): Promise<IBaseResponseModel<null> | null> {
       return data.data!;
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     toast.error("error");
     return null;
   }

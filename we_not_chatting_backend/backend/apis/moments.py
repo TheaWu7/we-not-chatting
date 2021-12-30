@@ -5,7 +5,7 @@ import nanoid
 from fastapi import Header, Query, Path
 from fastapi.responses import JSONResponse
 from fastapi import status
-from typing import Optional, List, Set
+from typing import Optional, List, Set, Dict
 from backend.models import PostMomentsModel, SimpleResponseModel, DeleteMomentsModel, GetLatestMomentsResponseModel, GetLatestMomentsDataModel
 from backend.models.moments_model import MomentsPostModel, MomentsMediaModel, MomentsCommentModel, LikeMomentModel, CommentMomentModel
 from backend.app import app
@@ -59,6 +59,63 @@ def delete_moments(data: DeleteMomentsModel, Authentication: Optional[str] = Hea
     return JSONResponse(res.dict())
 
 
+def generateMomentsResponse(posts, friends_id: List[str]):
+    data = GetLatestMomentsDataModel()
+    data.posts = []
+    res = GetLatestMomentsResponseModel(code=0, data=data)
+    for post in posts:
+        likes: List[str] = json.loads(post.likes if post.likes is not None and post.likes != "" else "[]")
+        comments: List[Dict[str, str]] = json.loads(post.comments if post.comments is not None and post.comments != "" else "[]")
+
+        filtered_comments = []
+        filtered_likes = []
+        for i in range(len(comments)):
+            if comments[i]["wx_id"] in friends_id:
+                filtered_comments.append(comments[i])
+        for i in range(len(likes)):
+            if likes[i] in friends_id:
+                filtered_likes.append(likes[i])
+        p = MomentsPostModel(moments_id=post.id,
+                             wx_id=post.poster.wx_id,
+                             likes=filtered_likes,
+                             comments=filtered_comments,
+                             content=post.content,
+                             time=post.time
+                             )
+        p.comments = []
+        for comment in comments:
+            c: MomentsCommentModel = MomentsCommentModel.parse_obj(comment)
+            p.comments.append(c)
+
+        if post.media is not None:
+            media = json.loads(post.media)
+            p.media = MomentsMediaModel.parse_obj(media)
+
+        data.posts.append(p)
+
+    return res
+
+
+def get_friend_list(user_id: str):
+    friend_tbl = User.alias()
+    user_tbl = User.alias()
+    friends_wxid = Contact.select() \
+        .where(Contact.owner == user_id) \
+        .orwhere(Contact.friend == user_id) \
+        .join(friend_tbl, on=(friend_tbl.id == Contact.owner)) \
+        .switch(Contact) \
+        .join(user_tbl, on=(user_tbl.id == Contact.friend))
+    friends = set()
+    user = User.get(id=user_id)
+    friends.add(user.wx_id)
+    for f in friends_wxid:
+        friends.add(f.friend.wx_id)
+        friends.add(f.owner.wx_id)
+
+    print(friends)
+    return list(friends)
+
+
 @app.get("/api/v1/moments")
 def get_latest_moments(offset: Optional[int] = Query(None), Authentication: Optional[str] = Header(None)):
     if Authentication is None:
@@ -69,34 +126,19 @@ def get_latest_moments(offset: Optional[int] = Query(None), Authentication: Opti
         return JSONResponse(AUTHENTICATION_FAILED_RESPONSE)
 
     try:
-        friends_id = Contact.select(Contact.friend_id).where(Contact.owner==user_id)
+        friends_id = Contact.select(Contact.owner).where(Contact.owner==user_id).orwhere(Contact.friend==user_id)
+        friends_id_2 = Contact.select(Contact.friend).where(Contact.owner==user_id).orwhere(Contact.friend==user_id)
         posts: List[Moments] = Moments\
             .select()\
-            .where((Moments.poster.in_(friends_id)) | (Moments.poster == user_id))\
+            .where((Moments.poster.in_(friends_id)) | (Moments.poster.in_(friends_id_2)) | (Moments.poster == user_id))\
             .order_by(Moments.time.desc())\
             .offset(offset)\
             .limit(20)
-        data = GetLatestMomentsDataModel()
-        data.posts = []
-        res = GetLatestMomentsResponseModel(code=0, data=data)
-        for post in posts:
-            comments = json.loads(post.comments if post.comments is not None and post.likes != "" else "[]")
-            p = MomentsPostModel(moments_id=post.id,
-                                 wx_id=post.poster.wx_id,
-                                 likes=json.loads(post.likes if post.likes is not None and post.likes != "" else "[]"),
-                                 content=post.content,
-                                 time=post.time
-                                )
-            p.comments = []
-            for comment in comments:
-                c: MomentsCommentModel = MomentsCommentModel.parse_obj(comment)
-                p.comments.append(c)
 
-            if post.media is not None:
-                media = json.loads(post.media)
-                p.media = MomentsMediaModel.parse_obj(media)
+        friends = get_friend_list(user_id)
 
-            data.posts.append(p)
+        print(posts)
+        res = generateMomentsResponse(posts, friends)
 
         return JSONResponse(res.dict())
 
@@ -184,27 +226,6 @@ def get_user_moments(user_wxid: str = Path(None), Authentication: Optional[str] 
         return JSONResponse(res.dict())
 
     moments = Moments.select().where(Moments.poster == user.id).limit(20).offset(offset)
-    data = GetLatestMomentsDataModel()
-    data.posts = []
-    res = GetLatestMomentsResponseModel(code=0, data=data)
-
-    for post in moments:
-        comments = json.loads(post.comments if post.comments is not None and post.likes != "" else "[]")
-        p = MomentsPostModel(moments_id=post.id,
-                             wx_id=post.poster.wx_id,
-                             likes=json.loads(post.likes if post.likes is not None and post.likes != "" else "[]"),
-                             content=post.content,
-                             time=post.time
-                             )
-        p.comments = []
-        for comment in comments:
-            c: MomentsCommentModel = MomentsCommentModel.parse_obj(comment)
-            p.comments.append(c)
-
-        if post.media is not None:
-            media = json.loads(post.media)
-            p.media = MomentsMediaModel.parse_obj(media)
-
-        data.posts.append(p)
-
+    friends = get_friend_list(user_id)
+    res = generateMomentsResponse(moments, friends)
     return JSONResponse(res.dict())

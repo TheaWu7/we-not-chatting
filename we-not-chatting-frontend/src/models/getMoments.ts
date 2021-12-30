@@ -8,16 +8,16 @@ export interface ICommentModel {
   wx_id: string;
   content: string;
 }
-export interface IGetMomentsModel {
+export interface IMomentsModel {
   wx_id: string;
   content: string;
-  media: IMediaModel[];
+  media?: IMediaModel;
   likes: string[];
   comments: ICommentModel[];
   time: number;
   moments_id: string;
 }
 export interface IGetMomentsResponseDataModel {
-  posts: IGetMomentsModel[];
+  posts: IMomentsModel[];
 }
 export type GetMomentsResponseModel = IBaseResponseModel<IGetMomentsResponseDataModel>;

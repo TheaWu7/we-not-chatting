@@ -2,12 +2,11 @@ import { toast } from "react-toastify";
 import { GetUserProfileResponseModel } from "../models/getUserProfile";
 import { IUserProfileModel } from "../models/userProfileModel";
 
-export async function getUserProfile(): Promise<IUserProfileModel | null> {
+export async function getUserProfile(userId: string): Promise<IUserProfileModel | null> {
   try {
     const res = await globalThis.axios({
-      url: "/user/:wx_id",
+      url: `/user/${userId}`,
       method: "GET",
-      params: {},
     });
     const data: GetUserProfileResponseModel = res.data;
     if (data.code !== 0) {

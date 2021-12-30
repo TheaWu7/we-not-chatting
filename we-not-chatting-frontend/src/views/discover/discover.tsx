@@ -10,14 +10,9 @@ export default function Discover() {
       <Link to="/moments" className={style.moments}>
         <div className={style.content}>
           <img src="/assets/moment.svg" alt="" width="28px" />
-          <span>Moments</span>
+          <span>时 刻</span>
         </div>
-        <img
-          src="/assets/right.svg"
-          alt=""
-          width="25px"
-          style={{ marginRight: "12px" }}
-        />
+        <img src="/assets/right.svg" alt="" width="25px" style={{ marginRight: "12px" }} />
       </Link>
     </div>
   );

@@ -140,7 +140,7 @@ async def accept_friend_request(data: AcceptFriendModel, Authentication: Optiona
         res = SimpleResponseModel(code=404, msg="Request Not Found")
         return JSONResponse(res.dict())
 
-    data = FriendRequestAcceptedModel(from_id=req.to_user, to_id=req.from_user, request_id=req.content)
+    data = FriendRequestAcceptedModel(from_id=req.to_user.wx_id, to_id=req.from_user.wx_id, request_id=req.content)
     req.accepted = True
     req.save()
 

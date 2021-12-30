@@ -1,9 +1,14 @@
 import NewFriendsItem from "../../components/newFriendsItem";
 import style from "./newFriends.module.css";
 import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { UserDataContext } from "../../contexts/userDataContext";
 
 export default function NewFriends() {
+  const { userData } = useContext(UserDataContext)!;
   const navigate = useNavigate();
+
+  const { friend_requests } = userData!;
 
   return (
     <div className={style.newFriendsWrapper}>
@@ -22,23 +27,9 @@ export default function NewFriends() {
         </Link>
       </div>
       <div className={style.newFriendsItemWrapper}>
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
-        <NewFriendsItem />
+        {friend_requests.map((v) => (
+          <NewFriendsItem {...v} />
+        ))}
       </div>
     </div>
   );

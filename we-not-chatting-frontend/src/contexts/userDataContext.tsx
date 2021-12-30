@@ -1,8 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
+import { IFriendRequestHistoryModel } from "../models/friendRequestHistory";
 import { IUserProfileModel } from "../models/userProfileModel";
 
 export interface IUserData {
   contact: IUserProfileModel[];
+  friend_requests: IFriendRequestHistoryModel[];
   user_id: string;
   avatar: string;
   nickname: string;

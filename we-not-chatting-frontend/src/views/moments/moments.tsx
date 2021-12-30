@@ -1,12 +1,31 @@
 import MomentsItem from "../../components/momentsItem";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import style from "./moments.module.css";
+import { useContext, useEffect, useState } from "react";
+import { IMomentsModel } from "../../models/getMoments";
+import { getMoments } from "../../requests/getMoments";
+import { UserDataContext } from "../../contexts/userDataContext";
+import { API_BASE_URL } from "../../constant";
 
 export default function Moments() {
+  const { userData, setUserData } = useContext(UserDataContext)!;
+
+  const [momentsList, setMomentsList] = useState<IMomentsModel[]>([]);
   const navigate = useNavigate();
+  async function getMomemtsData() {
+    const data = await getMoments();
+    if (data) {
+      setMomentsList(data!.posts);
+    }
+  }
+
+  useEffect(() => {
+    getMomemtsData();
+  }, []);
 
   return (
     <div className={style.momentsWrapper}>
+      {/* 原topar */}
       <div>
         <img
           className={style.back}
@@ -27,6 +46,7 @@ export default function Moments() {
           }}
         />
       </div>
+      {/* 划动页面后出现的topBar */}
       <div className={style.topbarWrapper}>
         <img
           className={style.topBack}
@@ -40,23 +60,18 @@ export default function Moments() {
         <span className={style.topTitle}>Moments</span>
         <img className={style.topPost} src="/assets/camera.svg" width="25px" alt="" />
       </div>
+      {/* 朋友圈背景 */}
       <div className={style.bgTopWrapper}>
         <img src="/assets/IMG_8956.JPG" alt="" width="100%" />
-        <span className={style.nickname}>我的鱼可不能吃</span>
+        <span className={style.nickname}>{userData?.nickname}</span>
         <div className={style.avatar}>
-          <img src="/assets/avatar-chat.jpg" alt="" width="66px" />
+          <img src={`${API_BASE_URL}/resources/${userData?.avatar}`} alt="" width="66px" />
         </div>
       </div>
       <div className={style.momentsItemWrapper}>
-        <MomentsItem />
-        <MomentsItem />
-        <MomentsItem />
-        <MomentsItem />
-        <MomentsItem />
-        <MomentsItem />
-        <MomentsItem />
-        <MomentsItem />
-        <MomentsItem />
+        {momentsList.map((v) => {
+          return <MomentsItem {...v!} />;
+        })}
       </div>
     </div>
   );

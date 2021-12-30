@@ -15,7 +15,7 @@ export async function postMoment({
   media_type,
 }: IPostMomentData): Promise<IBaseResponseModel<null> | null> {
   const fileIds: string[] = [];
-  if (media_content && media_type) {
+  if (media_content && media_type !== undefined) {
     const res = await Promise.all(media_content.map((v) => uploadResource(v)));
     if (res.every((v) => v !== null)) {
       res.forEach((v) => {
@@ -28,9 +28,11 @@ export async function postMoment({
     const req_data: any = {
       content,
     };
-    if (media_content && media_type) {
-      req_data["type"] = media_type;
-      req_data["content"] = fileIds;
+    if (media_content && media_type !== undefined) {
+      req_data["media"] = {
+        type: media_type,
+        content: fileIds,
+      };
     }
     const res = await globalThis.axios({
       url: "/moments",

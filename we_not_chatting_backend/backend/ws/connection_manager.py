@@ -87,7 +87,10 @@ class ConnectionManager:
         return await self.send_if_connected(data)
 
     async def accept_friend_request(self, data: FriendRequestAcceptedModel):
-        await self.send_and_save(data)
+        if data.to_id in self.connections:
+            await self.connections[data.to_id].send_text(data.json())
+        if data.from_id in self.connections:
+            await self.connections[data.from_id].send_text(data.json())
 
     async def delete_friend(self, data: DeleteFriendModel):
         await self.send_if_connected(data, to=data.delete_id)

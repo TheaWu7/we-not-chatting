@@ -2,6 +2,8 @@ import { createContext, useState } from "react";
 import { IUserProfileModel } from "../models/userProfileModel";
 
 export interface IUserProfileViewModel extends IUserProfileModel {
+  verification_msg?: string;
+  friend_request_id?: string;
   mode?: "friend_request" | "friend" | "stranger" | "me";
 }
 

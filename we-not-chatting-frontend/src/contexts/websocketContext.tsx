@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { IFriendRequestHistoryModel } from "../models/friendRequestHistory";
+import { getFriends } from "../requests/friends";
 import { WebSocketService } from "../websocket_svc/websocket_service";
 import { UserDataContext } from "./userDataContext";
 
@@ -15,9 +17,36 @@ export default function WebSocketContextProvider({ children }: any) {
 
   useEffect(() => {
     if (websocketSvc) {
-      websocketSvc.onFriendRequest = () => {
+      websocketSvc.onFriendRequest = (request_id, from_user, to_user, time, msg) => {
         setUserData((data) => {
-          return { ...(data as any), nickname: "fuck!!!!!" };
+          if (!data) return data;
+          const newFriendReq: IFriendRequestHistoryModel = {
+            request_id,
+            from_user,
+            to_user,
+            msg,
+            time,
+            accepted: false,
+          };
+          const newReqList = [...(data?.friend_requests ?? []), newFriendReq];
+          return { ...(data as any), friend_requests: newReqList };
+        });
+      };
+
+      websocketSvc.onDisconnect = async () => {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(null);
+          }, 1000);
+        });
+        websocketSvc.connect();
+      };
+
+      websocketSvc.onFriendRequestAccepted = async () => {
+        const friends = await getFriends();
+        setUserData((data) => {
+          if (!data) return data;
+          return { ...(data as any), contact: friends?.friends };
         });
       };
     }
