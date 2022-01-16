@@ -1,5 +1,5 @@
 import MomentsItem from "../../components/momentsItem";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import style from "./moments.module.css";
 
 export default function Moments() {

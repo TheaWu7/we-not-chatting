@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../constant";
 import { UserDataContext } from "../../contexts/userDataContext";
 import { UserProfileViewContext } from "../../contexts/userProfileViewContext";
 import { updateUserProfile } from "../../requests/updateUserProfile";
 import style from "./profile.module.css";
 
-// const avatarUrl = "/assets/avatar.png";
-// const avatarUrl = "/assets/xixi.png";
 export default function Profile() {
   const [clickEdit, setClickEdit] = useState(false);
   const { viewModel, setViewModel } = useContext(UserProfileViewContext)!;
   const { userData, setUserData } = useContext(UserDataContext)!;
   const [newName, setNewName] = useState(userData?.nickname ?? "");
 
+  const navigate = useNavigate();
   const nickname = viewModel?.nickname ?? userData?.nickname;
   const wx_id = viewModel?.wx_id ?? userData?.wx_id;
   const avatar = viewModel?.avatar ?? userData?.avatar;
@@ -20,24 +20,6 @@ export default function Profile() {
     "/assets/avatar-chat.jpg",
     "/assets/avatar-contacts.jpg",
     "/assets/IMG_0063.jpg",
-    "/assets/IMG_8956.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-contacts.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/IMG_0063.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/IMG_8956.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-contacts.jpg",
-    "/assets/IMG_0063.jpg",
-    "/assets/IMG_8956.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/avatar-contacts.jpg",
-    "/assets/avatar-chat.jpg",
-    "/assets/IMG_0063.jpg",
-    "/assets/avatar-chat.jpg",
     "/assets/IMG_8956.jpg",
   ];
 
@@ -63,7 +45,7 @@ export default function Profile() {
   const MomentPosts = () => (
     <div className={style.momentsImg}>
       {momentsImgList.map((v) => {
-        return <img src={v} alt="" width="60px" style={{ margin: "5px" }} />;
+        return <img src={v} alt="" width="60px" style={{ margin: "5px" }} key={v} />;
       })}
     </div>
   );
@@ -126,6 +108,16 @@ export default function Profile() {
 
   return (
     <div className={style.profileWrapper}>
+      <div className={style.back}>
+        <img
+          src="/assets/arrow-left-fff.svg"
+          alt=""
+          width="20px"
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
+      </div>
       <div className={style.avatar}>
         <img src={`${API_BASE_URL}/resources/${avatar}`} width="100%" alt="avatar" />
       </div>

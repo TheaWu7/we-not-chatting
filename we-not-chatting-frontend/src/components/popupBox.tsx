@@ -12,7 +12,7 @@ export default function PopupBox() {
       <div className={style.boxWrapper}>
         {functionList.map((v) => {
           return (
-            <div className={style.popupItem}>
+            <div className={style.popupItem} key={v.name}>
               <div className={style.avatar}>
                 <img src={v.url} alt="" width="27px" height="27px" />
               </div>
