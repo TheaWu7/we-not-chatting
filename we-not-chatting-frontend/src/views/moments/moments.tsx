@@ -17,7 +17,15 @@ export default function Moments() {
             navigate(-1);
           }}
         />
-        <img className={style.post} src="/assets/camera_fill.svg" width="25px" alt="" />
+        <img
+          className={style.post}
+          src="/assets/camera_fill.svg"
+          width="25px"
+          alt=""
+          onClick={() => {
+            navigate("/postMoment");
+          }}
+        />
       </div>
       <div className={style.topbarWrapper}>
         <img

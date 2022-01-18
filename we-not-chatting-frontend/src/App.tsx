@@ -16,6 +16,7 @@ import UserProfileViewContextProvider from "./contexts/userProfileViewContext";
 import ChattingView from "./views/chatting/chatting";
 import UserDataContextProvider from "./contexts/userDataContext";
 import { Navigate } from "react-router-dom";
+import PostMoment from "./views/postMoment/postMoment";
 
 const EnsureAuth = () => (localStorage["wnc_token"] ? <Outlet /> : <Navigate to="/login" />);
 
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/moments" element={<Moments />} />
                 <Route path="/userProfile" element={<UserProfile />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/postMoment" element={<PostMoment />} />
               </Route>
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />

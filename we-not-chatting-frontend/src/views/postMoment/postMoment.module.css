@@ -1,15 +1,22 @@
 .postMomentWrapper {
   position: relative;
 }
+.topbarWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+}
 .cancel {
-  position: absolute;
+  /* position: absolute; */
 }
 .post {
-  width: 50px;
-  height: 20px;
+  padding: 3px 8px;
   font-size: 17px;
   color: #f9faf9;
   background: #58be6b;
+  border-radius: 5px;
 }
 .btnDisabled {
   color: #b7b7b7;
